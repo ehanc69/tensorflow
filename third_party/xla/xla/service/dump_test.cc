@@ -135,6 +135,8 @@ TEST(DumpHloModule, WithBufferAssignment) {
   TF_ASSERT_OK_AND_ASSIGN(std::unique_ptr<HloModule> m,
                           ParseAndReturnUnverifiedModule(kModuleStr, config));
   AliasInfo alias_info;
+  BufferAssigner::Options opts;
+  opts.allocate_buffers_for_constants = true;
   std::unique_ptr<BufferAssignment> buffer_assignment =
       BufferAssigner::Run(
           /*module=*/&*m,
@@ -145,7 +147,7 @@ TEST(DumpHloModule, WithBufferAssignment) {
           },
           &alias_info,
           /*color_alignment=*/[](LogicalBuffer::Color) -> int64_t { return 1; },
-          /*allocate_buffers_for_constants=*/true)
+          /*opts=*/std::move(opts))
           .value();
   std::string dump_name = "dump";
   std::vector<std::string> paths =
