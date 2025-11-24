@@ -29,6 +29,34 @@ rules_shell_dependencies()
 
 rules_shell_toolchains()
 
+# Initialize toolchains for ML projects.
+#
+# A hermetic build system is designed to produce completely reproducible builds for C++.
+# Details: https://github.com/google-ml-infra/rules_ml_toolchain
+http_archive(
+    name = "rules_ml_toolchain",
+    sha256 = "0c8761b43857d5709dbdffec6c74d711ed7c5d422743012bfbdbc78b31f83d34",
+    strip_prefix = "rules_ml_toolchain-daa6ec02e02428e41c1ce12ddc7b14cb4ec5aa37",
+    urls = [
+        "https://github.com/yuriivcs/rules_ml_toolchain/archive/daa6ec02e02428e41c1ce12ddc7b14cb4ec5aa37.tar.gz",
+    ],
+)
+
+load(
+    "@rules_ml_toolchain//cc/deps:cc_toolchain_deps.bzl",
+    "cc_toolchain_deps",
+)
+
+cc_toolchain_deps()
+
+register_toolchains("@rules_ml_toolchain//cc:linux_x86_64_linux_x86_64")
+
+register_toolchains("@rules_ml_toolchain//cc:linux_x86_64_linux_x86_64_cuda")
+
+register_toolchains("@rules_ml_toolchain//cc:linux_aarch64_linux_aarch64")
+
+register_toolchains("@rules_ml_toolchain//cc:linux_aarch64_linux_aarch64_cuda")
+
 # Initialize hermetic Python
 load("@local_xla//third_party/py:python_init_rules.bzl", "python_init_rules")
 
@@ -90,21 +118,6 @@ nvidia_wheel_versions_repository(
 )
 
 python_wheel_version_suffix_repository(name = "tf_wheel_version_suffix")
-
-load(
-    "@rules_ml_toolchain//cc/deps:cc_toolchain_deps.bzl",
-    "cc_toolchain_deps",
-)
-
-cc_toolchain_deps()
-
-register_toolchains("@rules_ml_toolchain//cc:linux_x86_64_linux_x86_64")
-
-register_toolchains("@rules_ml_toolchain//cc:linux_x86_64_linux_x86_64_cuda")
-
-register_toolchains("@rules_ml_toolchain//cc:linux_aarch64_linux_aarch64")
-
-register_toolchains("@rules_ml_toolchain//cc:linux_aarch64_linux_aarch64_cuda")
 
 load(
     "@rules_ml_toolchain//third_party/gpus/cuda/hermetic:cuda_json_init_repository.bzl",
