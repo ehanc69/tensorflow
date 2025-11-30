@@ -378,6 +378,12 @@ class HloSharding {
   // tuples).
   std::map<int64_t, int64_t> UsedDevices(int64_t* count) const;
 
+  // Returns the list of devices used by sharding.
+  std::vector<int64_t> UsedDevices() const {
+    return std::vector<int64_t>(tile_assignment().array().begin(),
+                                tile_assignment().array().end());
+  }
+
   // Returns the tile that should be executed on the given device.
   // REQUIRES: !IsTuple()
   std::vector<int64_t> TileIndexForDevice(int64_t device) const;
