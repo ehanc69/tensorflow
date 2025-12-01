@@ -25,9 +25,12 @@ limitations under the License.
 #include "absl/status/status.h"
 #include "absl/status/statusor.h"
 #include "llvm/IR/Module.h"
+#include "mlir/IR/MLIRContext.h"
 #include "xla/backends/autotuner/codegen_backend.h"
 #include "xla/backends/gpu/autotuner/cublas.h"
 #include "xla/backends/gpu/autotuner/cublaslt.h"
+#include "xla/backends/gpu/autotuner/fission_backend.h"
+#include "xla/backends/gpu/autotuner/triton.h"
 #include "xla/hlo/ir/hlo_computation.h"
 #include "xla/hlo/ir/hlo_instruction.h"
 #include "xla/hlo/ir/hlo_module.h"
@@ -60,7 +63,10 @@ limitations under the License.
 #include "xla/service/gpu/transforms/conv_rewriter.h"
 #include "xla/service/gpu/transforms/cublas_pad_for_gemms.h"
 #include "xla/service/gpu/transforms/cudnn_fused_conv_rewriter.h"
+#include "xla/service/gpu/transforms/dot_algorithm_rewriter.h"
+#include "xla/service/gpu/transforms/gemm_rewriter.h"
 #include "xla/service/gpu/transforms/triangular_solve_rewriter.h"
+#include "xla/service/hlo_cost_analysis.h"
 #include "xla/service/hlo_module_config.h"
 #include "xla/service/hlo_verifier.h"
 #include "xla/stream_executor/device_description.h"
@@ -238,45 +244,13 @@ bool AMDGPUCompiler::RequiresCollectiveScheduleLinearizer(
   return false;
 }
 
-absl::Status AMDGPUCompiler::AddConvAndGemmAutotuningPasses(
-    HloPassPipeline* pipeline, const se::GpuComputeCapability& gpu_version,
-    const CompileOptions& options, HloModule* hlo_module,
-    AutotuneConfig& autotune_config, tsl::thread::ThreadPool* thread_pool,
+absl::StatusOr<std::vector<std::unique_ptr<CodegenBackend>>>
+AMDGPUCompiler::GetCodegenBackends(
     se::StreamExecutor* stream_exec,
-    const Compiler::GpuTargetConfig* target_config) {
-  const DebugOptions& debug_options = hlo_module->config().debug_options();
-  if (hlo_module->config()
-          .debug_options()
-          .xla_gpu_experimental_disable_binary_libraries() ||
-      debug_options.xla_gpu_autotune_level() == 0 ||
-      debug_options.xla_gpu_exclude_nondeterministic_ops() ||
-      stream_exec == nullptr) {
-    return absl::OkStatus();
-  }
-
-  // TODO(b/407494793): Remove the GpuConvAlgorithmPicker and use the autotuner
-  // it supports ROCM.
-  pipeline->AddPass<GpuConvAlgorithmPicker>(autotune_config);
-
+    const Compiler::GpuTargetConfig* target_config,
+    const DebugOptions& debug_options) {
   std::vector<std::unique_ptr<CodegenBackend>> backends;
-  // TODO(b/407494793): - Add proper support for ROCM. Currently the Cublas
-  // backend uses the same API as rocBLAS.
-  backends.push_back(std::make_unique<CublasBackend>(
-      stream_exec, &debug_options, this, target_config));
-  backends.push_back(std::make_unique<CublasLtBackend>(
-      stream_exec, &debug_options, this, target_config));
-  auto should_autotune = [](const HloInstruction& instruction) -> bool {
-    return instruction.opcode() == HloOpcode::kCustomCall &&
-           IsCublasGemm(instruction);
-  };
-  TF_ASSIGN_OR_RETURN(
-      std::unique_ptr<AutotunerPass> autotuner_pass,
-      AutotunerPass::Create(std::move(backends), debug_options, stream_exec,
-                            thread_pool, should_autotune, target_config,
-                            options.device_allocator));
-  pipeline->AddPass(std::move(autotuner_pass));
-
-  return absl::OkStatus();
+  return backends;
 }
 
 AMDGPUCompiler::AMDGPUCompiler()
@@ -308,18 +282,6 @@ AMDGPUCompiler::CompileTargetBinary(
   }
 
   return BackendCompileResult{"", std::move(hsaco)};
-}
-
-absl::Status AMDGPUCompiler::AddGemmFusionAutotuningPasses(
-    HloPassPipeline* pipeline, HloModule* hlo_module,
-    AutotuneConfig& autotune_config, tsl::thread::ThreadPool* thread_pool,
-    const MultiProcessKeyValueStore& key_value_store,
-    const se::SemanticVersion& toolkit_version,
-    se::StreamExecutor* stream_executor) {
-  pipeline->AddPass<GemmFusionAutotuner>(autotune_config, toolkit_version,
-                                         thread_pool, key_value_store,
-                                         mlir_context());
-  return absl::OkStatus();
 }
 
 std::vector<std::string> AMDGPUCompiler::GetLLVMCommandLineOptions(

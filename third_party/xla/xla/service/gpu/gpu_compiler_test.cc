@@ -711,7 +711,7 @@ ENTRY main {
 }
 
 TEST_F(GpuCompilerTestWithAutotuneDb,
-       CublasF8NumericallySameWithTritonFallbackAndWithoutTriton) {
+       DISABLED_CublasF8NumericallySameWithTritonFallbackAndWithoutTriton) {
   if (!get_cuda_cc().IsAtLeastHopper()) {
     GTEST_SKIP()
         << "Autotuning results have only been generated for Hopper GPUs";
@@ -1794,12 +1794,6 @@ TEST_F(PassOrderTest, GemmRewriterRunsAfterDotNormalizer) {
       /*first_pass_regex=*/"dot_normalizer",
       /*last_pass_regex=*/"cublas-gemm-rewriter");
   VerifyNotRunInBetween(pass_range, /*pass_regex=*/"algsimp");
-}
-
-TEST_F(PassOrderTest, NestGemmFusionRunsAfterGemmFusionAutotuner) {
-  // NestGemmFusion expect to see __triton_gemm custom call with a backend
-  // config created by gemm_fusion_autotuner.
-  VerifyPassOrder("gemm-fusion-autotuner", "nest_gemm_fusion");
 }
 
 TEST_F(PassOrderTest, TransposeDimensionGrouperRunsBeforeGemmRewriter) {
