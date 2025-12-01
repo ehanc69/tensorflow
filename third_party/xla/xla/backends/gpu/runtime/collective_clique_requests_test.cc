@@ -36,9 +36,9 @@ TEST(CollectiveCliqueRequestsTest, OrderedRequests) {
   GpuCliqueKey k2({d0, d1, d2, d3}, 4);
 
   CollectiveCliqueRequests requests;
-  TF_ASSERT_OK(requests.RequestClique(k0));
-  TF_ASSERT_OK(requests.RequestClique(k1));
-  TF_ASSERT_OK(requests.RequestClique(k2));
+  ASSERT_OK(requests.RequestClique(k0));
+  ASSERT_OK(requests.RequestClique(k1));
+  ASSERT_OK(requests.RequestClique(k2));
 
   // Check that we acquire larger cliques first, and then cliques with smaller
   // id first, as acquiring cliques according to natural clique key order might

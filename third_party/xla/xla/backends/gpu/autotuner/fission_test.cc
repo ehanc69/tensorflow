@@ -147,7 +147,7 @@ TEST_F(FissionBackendTest, ApplyCublasConfigToFusionInstruction) {
   config.set_algorithm(3);
   google::protobuf::Any any;
   any.PackFrom(config);
-  TF_EXPECT_OK(backend_.ApplyConfig(
+  EXPECT_OK(backend_.ApplyConfig(
       *hlo_module->entry_computation()->root_instruction(), any));
   EXPECT_THAT(RunFileCheck(hlo_module->ToString(),
                            "CHECK: \"__cublas$gemm\"\n"
@@ -165,7 +165,7 @@ TEST_F(FissionBackendTest, ApplyCublasLtConfigToFusionInstruction) {
   config.set_algorithm(3);
   google::protobuf::Any any;
   any.PackFrom(config);
-  TF_EXPECT_OK(backend_.ApplyConfig(
+  EXPECT_OK(backend_.ApplyConfig(
       *hlo_module->entry_computation()->root_instruction(), any));
   EXPECT_THAT(
       RunFileCheck(hlo_module->ToString(), "CHECK: \"__cublas$lt$matmul\""),
@@ -179,7 +179,7 @@ TEST_F(FissionBackendTest, ApplyCustomKernelConfigToFusionInstruction) {
   config.set_kernel_index(3);
   google::protobuf::Any any;
   any.PackFrom(config);
-  TF_EXPECT_OK(backend_.ApplyConfig(
+  EXPECT_OK(backend_.ApplyConfig(
       *hlo_module->entry_computation()->root_instruction(), any));
   EXPECT_THAT(RunFileCheck(hlo_module->ToString(), "CHECK: \"kernel_index\":3"),
               IsOkAndHolds(true));
@@ -248,7 +248,7 @@ ENTRY main {
   config.set_algorithm(3);
   google::protobuf::Any any;
   any.PackFrom(config);
-  TF_EXPECT_OK(backend_.ApplyConfig(*fusion_instr, any));
+  EXPECT_OK(backend_.ApplyConfig(*fusion_instr, any));
   EXPECT_THAT(
       RunFileCheck(
           hlo_module->ToString(),

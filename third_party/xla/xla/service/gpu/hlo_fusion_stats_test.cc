@@ -86,8 +86,7 @@ TEST_F(HloFusionStatsTest, LoopFusionAndReduceFusion) {
     })")
                     .value();
   HloFusionStatsVisitor fusion_stats_visitor;
-  TF_ASSERT_OK(
-      module.get()->entry_computation()->Accept(&fusion_stats_visitor));
+  ASSERT_OK(module.get()->entry_computation()->Accept(&fusion_stats_visitor));
   SCOPED_TRACE(module->ToString());
 
   std::string stats = fusion_stats_visitor.ToString();
@@ -115,8 +114,7 @@ TEST_F(HloFusionStatsTest, AggregateCwiseOps) {
     })")
                     .value();
   HloFusionStatsVisitor fusion_stats_visitor;
-  TF_ASSERT_OK(
-      module.get()->entry_computation()->Accept(&fusion_stats_visitor));
+  ASSERT_OK(module.get()->entry_computation()->Accept(&fusion_stats_visitor));
   SCOPED_TRACE(module->ToString());
 
   std::string stats = fusion_stats_visitor.ToString();

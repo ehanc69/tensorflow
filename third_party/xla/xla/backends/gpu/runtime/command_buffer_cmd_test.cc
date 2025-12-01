@@ -256,8 +256,8 @@ TEST(CommandBufferCmdTest, MemcpyCmd) {
   se::DeviceMemory<int32_t> b =
       stream_executor->AllocateArray<int32_t>(length, 0);
 
-  TF_ASSERT_OK(stream->Memset32(&a, 42, byte_length));
-  TF_ASSERT_OK(stream->MemZero(&b, byte_length));
+  ASSERT_OK(stream->Memset32(&a, 42, byte_length));
+  ASSERT_OK(stream->MemZero(&b, byte_length));
 
   // Prepare buffer allocations for recording command buffer.
   BufferAllocation alloc_a(/*index=*/0, byte_length, /*color=*/0);
@@ -287,16 +287,16 @@ TEST(CommandBufferCmdTest, MemcpyCmd) {
   TF_ASSERT_OK_AND_ASSIGN(
       auto command_buffer,
       stream_executor->CreateCommandBuffer(se::CommandBuffer::Mode::kPrimary));
-  TF_ASSERT_OK(executor.Record(params, record_params,
-                               CommandBufferCmd::RecordCreate{},
-                               command_buffer.get()));
+  ASSERT_OK(executor.Record(params, record_params,
+                            CommandBufferCmd::RecordCreate{},
+                            command_buffer.get()));
 
   // Execute command buffer and verify that it copied the memory.
-  TF_ASSERT_OK(command_buffer->Submit(stream.get()));
+  ASSERT_OK(command_buffer->Submit(stream.get()));
 
   // Copy `b` data back to host.
   std::vector<int32_t> dst(4, 0);
-  TF_ASSERT_OK(stream->Memcpy(dst.data(), b, byte_length));
+  ASSERT_OK(stream->Memcpy(dst.data(), b, byte_length));
 
   ASSERT_EQ(dst, std::vector<int32_t>(4, 42));
 }
@@ -314,8 +314,8 @@ TEST(CommandBufferCmdTest, LaunchCmd) {
   se::DeviceMemory<int32_t> b =
       stream_executor->AllocateArray<int32_t>(length, 0);
 
-  TF_ASSERT_OK(stream->Memset32(&a, 42, byte_length));
-  TF_ASSERT_OK(stream->MemZero(&b, byte_length));
+  ASSERT_OK(stream->Memset32(&a, 42, byte_length));
+  ASSERT_OK(stream->MemZero(&b, byte_length));
 
   // Prepare buffer allocations for recording command buffer.
   BufferAllocation alloc_a(/*index=*/0, byte_length, /*color=*/0);
@@ -345,7 +345,7 @@ TEST(CommandBufferCmdTest, LaunchCmd) {
                                     /*binary=*/fatbin};
 
   CommandBufferCmd::StateManager state;
-  TF_ASSERT_OK(executor.Initialize({stream_executor, source}, state));
+  ASSERT_OK(executor.Initialize({stream_executor, source}, state));
 
   ServiceExecutableRunOptions run_options;
   se::StreamExecutorMemoryAllocator allocator(stream_executor);
@@ -359,16 +359,16 @@ TEST(CommandBufferCmdTest, LaunchCmd) {
   TF_ASSERT_OK_AND_ASSIGN(
       auto command_buffer,
       stream_executor->CreateCommandBuffer(se::CommandBuffer::Mode::kPrimary));
-  TF_ASSERT_OK(executor.Record(params, record_params,
-                               CommandBufferCmd::RecordCreate{},
-                               command_buffer.get()));
+  ASSERT_OK(executor.Record(params, record_params,
+                            CommandBufferCmd::RecordCreate{},
+                            command_buffer.get()));
 
   // Execute command buffer and verify that it copied the memory.
-  TF_ASSERT_OK(command_buffer->Submit(stream.get()));
+  ASSERT_OK(command_buffer->Submit(stream.get()));
 
   // Copy `b` data back to host.
   std::vector<int32_t> dst(4, 0);
-  TF_ASSERT_OK(stream->Memcpy(dst.data(), b, byte_length));
+  ASSERT_OK(stream->Memcpy(dst.data(), b, byte_length));
 
   ASSERT_EQ(dst, std::vector<int32_t>(4, 42 + 42));
 }
@@ -386,8 +386,8 @@ TEST(CommandBufferCmdTest, LaunchCmdWithPriority) {
   se::DeviceMemory<int32_t> b =
       stream_executor->AllocateArray<int32_t>(length, 0);
 
-  TF_ASSERT_OK(stream->Memset32(&a, 42, byte_length));
-  TF_ASSERT_OK(stream->MemZero(&b, byte_length));
+  ASSERT_OK(stream->Memset32(&a, 42, byte_length));
+  ASSERT_OK(stream->MemZero(&b, byte_length));
 
   // Prepare buffer allocations for recording command buffer.
   BufferAllocation alloc_a(/*index=*/0, byte_length, /*color=*/0);
@@ -419,7 +419,7 @@ TEST(CommandBufferCmdTest, LaunchCmdWithPriority) {
                                     /*binary=*/fatbin};
 
   CommandBufferCmd::StateManager state;
-  TF_ASSERT_OK(executor.Initialize({stream_executor, source}, state));
+  ASSERT_OK(executor.Initialize({stream_executor, source}, state));
 
   ServiceExecutableRunOptions run_options;
   se::StreamExecutorMemoryAllocator allocator(stream_executor);
@@ -433,16 +433,16 @@ TEST(CommandBufferCmdTest, LaunchCmdWithPriority) {
   TF_ASSERT_OK_AND_ASSIGN(
       auto command_buffer,
       stream_executor->CreateCommandBuffer(se::CommandBuffer::Mode::kPrimary));
-  TF_ASSERT_OK(executor.Record(params, record_params,
-                               CommandBufferCmd::RecordCreate{},
-                               command_buffer.get()));
+  ASSERT_OK(executor.Record(params, record_params,
+                            CommandBufferCmd::RecordCreate{},
+                            command_buffer.get()));
 
   // Execute command buffer and verify that it copied the memory.
-  TF_ASSERT_OK(command_buffer->Submit(stream.get()));
+  ASSERT_OK(command_buffer->Submit(stream.get()));
 
   // Copy `b` data back to host.
   std::vector<int32_t> dst(4, 0);
-  TF_ASSERT_OK(stream->Memcpy(dst.data(), b, byte_length));
+  ASSERT_OK(stream->Memcpy(dst.data(), b, byte_length));
 
   ASSERT_EQ(dst, std::vector<int32_t>(4, 42 + 42));
 }
@@ -462,8 +462,8 @@ TEST(CommandBufferCmdTest, DynamicSliceCopyFusionCmd) {
   se::DeviceMemory<int32_t> b =
       stream_executor->AllocateArray<int32_t>(length, 0);
 
-  TF_ASSERT_OK(stream->Memcpy(&a, a_data.data(), byte_length));
-  TF_ASSERT_OK(stream->MemZero(&b, byte_length));
+  ASSERT_OK(stream->Memcpy(&a, a_data.data(), byte_length));
+  ASSERT_OK(stream->MemZero(&b, byte_length));
 
   // Prepare buffer allocations for recording command buffer.
   BufferAllocation alloc_a(/*index=*/0, byte_length, /*color=*/0);
@@ -494,16 +494,16 @@ TEST(CommandBufferCmdTest, DynamicSliceCopyFusionCmd) {
   TF_ASSERT_OK_AND_ASSIGN(
       auto command_buffer,
       stream_executor->CreateCommandBuffer(se::CommandBuffer::Mode::kPrimary));
-  TF_ASSERT_OK(executor.Record(params, record_params,
-                               CommandBufferCmd::RecordCreate{},
-                               command_buffer.get()));
+  ASSERT_OK(executor.Record(params, record_params,
+                            CommandBufferCmd::RecordCreate{},
+                            command_buffer.get()));
 
   // Execute command buffer and verify that it copied the memory.
-  TF_ASSERT_OK(command_buffer->Submit(stream.get()));
+  ASSERT_OK(command_buffer->Submit(stream.get()));
 
   // Copy `b` data back to host.
   std::vector<int32_t> dst(8, 0);
-  TF_ASSERT_OK(stream->Memcpy(dst.data(), b, byte_length));
+  ASSERT_OK(stream->Memcpy(dst.data(), b, byte_length));
 
   ASSERT_EQ(dst, std::vector<int32_t>({0, 0, 0, 0, 44, 45, 46, 47}));
 }
@@ -616,9 +616,9 @@ TEST(CommandBufferCmdTest, RecordExecutorsWithDependencies) {
       stream_executor->AllocateArray<int32_t>(length, 0);
 
   // Initialize to zero.
-  TF_ASSERT_OK(stream->MemZero(&a, byte_length));
-  TF_ASSERT_OK(stream->MemZero(&b, byte_length));
-  TF_ASSERT_OK(stream->MemZero(&c, byte_length));
+  ASSERT_OK(stream->MemZero(&a, byte_length));
+  ASSERT_OK(stream->MemZero(&b, byte_length));
+  ASSERT_OK(stream->MemZero(&c, byte_length));
 
   // Buffer allocations for recording.
   BufferAllocation alloc_a(/*index=*/0, byte_length, /*color=*/0);
@@ -664,9 +664,9 @@ TEST(CommandBufferCmdTest, RecordExecutorsWithDependencies) {
   Thunk::ExecutableSource source_fatbin = {/*text=*/{}, /*binary=*/fatbin};
 
   CommandBufferCmd::StateManager state;
-  TF_ASSERT_OK(exec_a.Initialize({stream_executor, source_empty}, state));
-  TF_ASSERT_OK(exec_b.Initialize({stream_executor, source_fatbin}, state));
-  TF_ASSERT_OK(exec_c.Initialize({stream_executor, source_empty}, state));
+  ASSERT_OK(exec_a.Initialize({stream_executor, source_empty}, state));
+  ASSERT_OK(exec_b.Initialize({stream_executor, source_fatbin}, state));
+  ASSERT_OK(exec_c.Initialize({stream_executor, source_empty}, state));
 
   // Execute params and allocations mapping indices 0=a,1=b,2=c
   ServiceExecutableRunOptions run_options;
@@ -684,29 +684,29 @@ TEST(CommandBufferCmdTest, RecordExecutorsWithDependencies) {
 
   // Record A (no deps)
   // Record A, B, C with dependencies using the Record API; finalize on B.
-  TF_ASSERT_OK(exec_a.Record(exec_params, record_params,
-                             CommandBufferCmd::RecordCreate{},
-                             command_buffer.get(), /*finalize=*/false));
+  ASSERT_OK(exec_a.Record(exec_params, record_params,
+                          CommandBufferCmd::RecordCreate{},
+                          command_buffer.get(), /*finalize=*/false));
 
   auto a_sinks = exec_a.SinkCommands(record_params, command_buffer.get(),
                                      /*unroll_iteration=*/0);
-  TF_ASSERT_OK(
+  ASSERT_OK(
       exec_b.Record(exec_params, record_params,
                     CommandBufferCmd::RecordCreate{absl::MakeSpan(a_sinks)},
                     command_buffer.get(), /*finalize=*/false));
 
   auto b_sinks = exec_b.SinkCommands(record_params, command_buffer.get(),
                                      /*unroll_iteration=*/0);
-  TF_ASSERT_OK(
+  ASSERT_OK(
       exec_c.Record(exec_params, record_params,
                     CommandBufferCmd::RecordCreate{absl::MakeSpan(b_sinks)},
                     command_buffer.get(), /*finalize=*/true));
 
   // Submit and verify c == 2 for all elements.
-  TF_ASSERT_OK(command_buffer->Submit(stream.get()));
+  ASSERT_OK(command_buffer->Submit(stream.get()));
 
   std::vector<int32_t> dst(length, 0);
-  TF_ASSERT_OK(stream->Memcpy(dst.data(), c, byte_length));
+  ASSERT_OK(stream->Memcpy(dst.data(), c, byte_length));
   ASSERT_EQ(dst, std::vector<int32_t>(length, 2));
 }
 
@@ -726,9 +726,9 @@ TEST(CommandBufferCmdTest, NestedChildCmdCreateAndUpdate) {
   se::DeviceMemory<int32_t> c = stream_executor->AllocateArray<int32_t>(length);
 
   // Initialize a = 1s, b = 0s, c = 0s.
-  TF_ASSERT_OK(stream->Memset32(&a, /*pattern=*/1, byte_length));
-  TF_ASSERT_OK(stream->MemZero(&b, byte_length));
-  TF_ASSERT_OK(stream->MemZero(&c, byte_length));
+  ASSERT_OK(stream->Memset32(&a, /*pattern=*/1, byte_length));
+  ASSERT_OK(stream->MemZero(&b, byte_length));
+  ASSERT_OK(stream->MemZero(&c, byte_length));
 
   // Buffer allocations.
   BufferAllocation alloc_a(/*index=*/0, byte_length, /*color=*/0);
@@ -772,7 +772,7 @@ TEST(CommandBufferCmdTest, NestedChildCmdCreateAndUpdate) {
   Thunk::ExecutableSource source = {/*text=*/"", /*binary=*/{}};
   se::StreamExecutorMemoryAllocator allocator(stream_executor);
   BufferAllocations allocations({a, b, c}, 0, &allocator);
-  TF_ASSERT_OK(outer_executor.Initialize(
+  ASSERT_OK(outer_executor.Initialize(
       {stream_executor, source, &allocations, stream.get(), stream.get()},
       state));
 
@@ -786,22 +786,22 @@ TEST(CommandBufferCmdTest, NestedChildCmdCreateAndUpdate) {
   TF_ASSERT_OK_AND_ASSIGN(
       auto command_buffer,
       stream_executor->CreateCommandBuffer(se::CommandBuffer::Mode::kPrimary));
-  TF_ASSERT_OK(outer_executor.Record(exec_params, record_params,
-                                     CommandBufferCmd::RecordCreate{},
-                                     command_buffer.get(), /*finalize=*/true));
-  TF_ASSERT_OK(command_buffer->Submit(stream.get()));
+  ASSERT_OK(outer_executor.Record(exec_params, record_params,
+                                  CommandBufferCmd::RecordCreate{},
+                                  command_buffer.get(), /*finalize=*/true));
+  ASSERT_OK(command_buffer->Submit(stream.get()));
 
   // Verify c == a (all ones).
   std::vector<int32_t> dst(length, 0);
-  TF_ASSERT_OK(stream->Memcpy(dst.data(), c, byte_length));
+  ASSERT_OK(stream->Memcpy(dst.data(), c, byte_length));
   ASSERT_EQ(dst, std::vector<int32_t>(length, 1));
 
   // Also verify a == 1s and b == 0s.
   {
     std::vector<int32_t> a_host(length, 0);
     std::vector<int32_t> b_host(length, 0);
-    TF_ASSERT_OK(stream->Memcpy(a_host.data(), a, byte_length));
-    TF_ASSERT_OK(stream->Memcpy(b_host.data(), b, byte_length));
+    ASSERT_OK(stream->Memcpy(a_host.data(), a, byte_length));
+    ASSERT_OK(stream->Memcpy(b_host.data(), b, byte_length));
     ASSERT_EQ(a_host, std::vector<int32_t>(length, 1));
     ASSERT_EQ(b_host, std::vector<int32_t>(length, 0));
   }
@@ -812,8 +812,8 @@ TEST(CommandBufferCmdTest, NestedChildCmdCreateAndUpdate) {
       stream_executor->AllocateArray<int32_t>(length);
   se::DeviceMemory<int32_t> c2 =
       stream_executor->AllocateArray<int32_t>(length);
-  TF_ASSERT_OK(stream->Memset32(&a2, /*pattern=*/7, byte_length));
-  TF_ASSERT_OK(stream->MemZero(&c2, byte_length));
+  ASSERT_OK(stream->Memset32(&a2, /*pattern=*/7, byte_length));
+  ASSERT_OK(stream->MemZero(&c2, byte_length));
 
   BufferAllocations allocations2({a2, b, c2}, 0, &allocator);
   Thunk::ExecuteParams exec_params2 = Thunk::ExecuteParams::Create(
@@ -824,22 +824,22 @@ TEST(CommandBufferCmdTest, NestedChildCmdCreateAndUpdate) {
   CommandBufferCmd::RecordParams record_params2 = {state,
                                                    std::move(updated_allocs)};
 
-  TF_ASSERT_OK(outer_executor.Record(exec_params2, record_params2,
-                                     CommandBufferCmd::RecordCreate{},
-                                     command_buffer.get(), /*finalize=*/true));
-  TF_ASSERT_OK(command_buffer->Submit(stream.get()));
+  ASSERT_OK(outer_executor.Record(exec_params2, record_params2,
+                                  CommandBufferCmd::RecordCreate{},
+                                  command_buffer.get(), /*finalize=*/true));
+  ASSERT_OK(command_buffer->Submit(stream.get()));
 
   // Verify c2 == a2 (all sevens).
   std::vector<int32_t> dst2(length, 0);
-  TF_ASSERT_OK(stream->Memcpy(dst2.data(), c2, byte_length));
+  ASSERT_OK(stream->Memcpy(dst2.data(), c2, byte_length));
   ASSERT_EQ(dst2, std::vector<int32_t>(length, 7));
 
   // Also verify a2 == 7s and b == 0s.
   {
     std::vector<int32_t> a2_host(length, 0);
     std::vector<int32_t> b_host(length, 0);
-    TF_ASSERT_OK(stream->Memcpy(a2_host.data(), a2, byte_length));
-    TF_ASSERT_OK(stream->Memcpy(b_host.data(), b, byte_length));
+    ASSERT_OK(stream->Memcpy(a2_host.data(), a2, byte_length));
+    ASSERT_OK(stream->Memcpy(b_host.data(), b, byte_length));
     ASSERT_EQ(a2_host, std::vector<int32_t>(length, 7));
     ASSERT_EQ(b_host, std::vector<int32_t>(length, 0));
   }

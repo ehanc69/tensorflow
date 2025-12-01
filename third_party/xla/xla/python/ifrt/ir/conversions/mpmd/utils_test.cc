@@ -97,7 +97,7 @@ TEST_P(ShardingParamConversionTest, MeshTensorTypeToShardingParam) {
   TF_ASSERT_OK_AND_ASSIGN(
       auto actual_sharding_param,
       MeshTensorTypeToShardingParam(mesh_tensor_type, mesh));
-  TF_EXPECT_OK(actual_sharding_param.verify());
+  EXPECT_OK(actual_sharding_param.verify());
 
   // Convert ShardingParam to HloSharding.
   TF_ASSERT_OK_AND_ASSIGN(

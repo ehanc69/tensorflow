@@ -207,7 +207,7 @@ TEST_F(CustomCallTest, WithStatusSucceeded) {
       /*output_operand_aliasing=*/{}, /*literal=*/nullptr,
       /*schedule=*/CustomCallSchedule::SCHEDULE_NONE,
       /*api_version=*/CustomCallApiVersion::API_VERSION_STATUS_RETURNING);
-  TF_ASSERT_OK(ExecuteAndTransfer(&b, {}).status());
+  ASSERT_OK(ExecuteAndTransfer(&b, {}).status());
 }
 
 void Callback_WithStatusFailed(se::gpu::GpuStreamHandle /*stream*/,
@@ -415,7 +415,7 @@ TEST_F(CustomCallTest, ExportedFfiOpaque) {
              /*output_operand_aliasing=*/{}, /*literal=*/nullptr,
              /*schedule=*/CustomCallSchedule::SCHEDULE_NONE,
              /*api_version=*/CustomCallApiVersion::API_VERSION_TYPED_FFI);
-  TF_ASSERT_OK(ExecuteAndTransfer(&b, {}).status());
+  ASSERT_OK(ExecuteAndTransfer(&b, {}).status());
 }
 
 static absl::Status CheckTokens(std::vector<PrimitiveType> args,
@@ -486,7 +486,7 @@ TEST_P(CustomCallTokensTest, ExportedTokensTest) {
              /*schedule=*/CustomCallSchedule::SCHEDULE_NONE,
              /*api_version=*/CustomCallApiVersion::API_VERSION_TYPED_FFI);
 
-  TF_ASSERT_OK(ExecuteAndTransfer(&b, {}).status());
+  ASSERT_OK(ExecuteAndTransfer(&b, {}).status());
 }
 
 INSTANTIATE_TEST_SUITE_P(CustomCallTokensTest, CustomCallTokensTest,
@@ -510,7 +510,7 @@ TEST_F(CustomCallTest, ExportedFfiWithStatusSucceeded) {
              /*output_operand_aliasing=*/{}, /*literal=*/nullptr,
              /*schedule=*/CustomCallSchedule::SCHEDULE_NONE,
              /*api_version=*/CustomCallApiVersion::API_VERSION_TYPED_FFI);
-  TF_ASSERT_OK(ExecuteAndTransfer(&b, {}).status());
+  ASSERT_OK(ExecuteAndTransfer(&b, {}).status());
 }
 
 //===----------------------------------------------------------------------===//
@@ -556,7 +556,7 @@ TEST_F(CustomCallTest, FfiAttributes) {
              /*output_operand_aliasing=*/{}, /*literal=*/nullptr,
              /*schedule=*/CustomCallSchedule::SCHEDULE_NONE,
              /*api_version=*/CustomCallApiVersion::API_VERSION_TYPED_FFI);
-  TF_ASSERT_OK(ExecuteAndTransfer(&b, {}).status());
+  ASSERT_OK(ExecuteAndTransfer(&b, {}).status());
 }
 
 //===----------------------------------------------------------------------===//
@@ -715,12 +715,12 @@ TEST_F(CustomCallTest, FfiExecutionContext) {
              /*api_version=*/CustomCallApiVersion::API_VERSION_TYPED_FFI);
 
   ffi::ExecutionContext execution_context;
-  TF_ASSERT_OK(execution_context.Emplace<SomeExtraContext>(42));
+  ASSERT_OK(execution_context.Emplace<SomeExtraContext>(42));
 
   ffi::internal::ScopedExecutionContext scoped_execution_context(
       &execution_context);
 
-  TF_ASSERT_OK(ExecuteAndTransfer(&b, {}).status());
+  ASSERT_OK(ExecuteAndTransfer(&b, {}).status());
 
   // Check that FFI handler was called during initialization and execution.
   TF_ASSERT_OK_AND_ASSIGN(auto* user_context,
@@ -780,7 +780,7 @@ TEST_F(CustomCallTest, FfiExecutionState) {
              /*schedule=*/CustomCallSchedule::SCHEDULE_NONE,
              /*api_version=*/CustomCallApiVersion::API_VERSION_TYPED_FFI);
 
-  TF_ASSERT_OK(ExecuteAndTransfer(&b, {}).status());
+  ASSERT_OK(ExecuteAndTransfer(&b, {}).status());
 }
 
 //===----------------------------------------------------------------------===//
@@ -866,7 +866,7 @@ TEST_F(CustomCallTest, AsyncCustomCalls) {
              /*api_version=*/CustomCallApiVersion::API_VERSION_TYPED_FFI);
 
   Literal literal = LiteralUtil::CreateR0<float>(42.0f);
-  TF_ASSERT_OK(ExecuteAndTransfer(&b, {&literal}).status());
+  ASSERT_OK(ExecuteAndTransfer(&b, {&literal}).status());
 }
 
 //===----------------------------------------------------------------------===//

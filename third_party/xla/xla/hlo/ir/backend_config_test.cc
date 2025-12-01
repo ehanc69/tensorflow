@@ -64,7 +64,7 @@ void RunThreaded(Input input, CheckFn check_fn) {
 TEST(BackendConfigWrapperTest, ConcurrentGetProto) {
   RunThreaded(std::string{kRawString}, [](BackendConfigWrapper& source) {
     gpu::GpuBackendConfig proto;
-    TF_EXPECT_OK(source.GetProto(&proto));
+    EXPECT_OK(source.GetProto(&proto));
     EXPECT_TRUE(proto.has_fusion_backend_config());
     BackendConfigWrapper wrapped(proto);
     EXPECT_TRUE(wrapped == source);
@@ -74,7 +74,7 @@ TEST(BackendConfigWrapperTest, ConcurrentGetProto) {
 TEST(BackendConfigWrapperTest, ConcurrentGetRawString) {
   BackendConfigWrapper source_json(std::string{kRawString});
   gpu::GpuBackendConfig proto;
-  TF_EXPECT_OK(source_json.GetProto(&proto));
+  EXPECT_OK(source_json.GetProto(&proto));
 
   RunThreaded(proto, [](BackendConfigWrapper& source) {
     std::string raw_string = source.GetRawString();
@@ -105,7 +105,7 @@ TEST(BackendConfigWrapperTest, SelfComparisonDoesNotDeadlock) {
 TEST(BackendConfigWrapperTest, ComparisonDoesNotDeadlock) {
   BackendConfigWrapper source_json(std::string{kRawString});
   gpu::GpuBackendConfig proto;
-  TF_EXPECT_OK(source_json.GetProto(&proto));
+  EXPECT_OK(source_json.GetProto(&proto));
   RunThreaded(std::string{kRawString}, [&proto](BackendConfigWrapper& source) {
     BackendConfigWrapper other_first(proto);
     EXPECT_TRUE(other_first == source);

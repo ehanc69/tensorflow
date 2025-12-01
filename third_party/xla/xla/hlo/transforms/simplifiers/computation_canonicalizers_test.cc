@@ -62,7 +62,7 @@ TEST_F(ComputationCanonicalizersTest, MoveParametersToFront) {
 
   TF_ASSERT_OK_AND_ASSIGN(std::unique_ptr<VerifiedHloModule> module,
                           ParseAndReturnVerifiedModule(hlo));
-  TF_ASSERT_OK(MoveParametersAndConstantsToFront(*module->entry_computation()));
+  ASSERT_OK(MoveParametersAndConstantsToFront(*module->entry_computation()));
   EXPECT_THAT(
       RunFileCheck(
           module->ToString(HloPrintOptions{}.set_print_operand_shape(false)),

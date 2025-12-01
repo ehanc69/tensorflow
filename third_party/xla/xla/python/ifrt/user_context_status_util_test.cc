@@ -66,7 +66,7 @@ TEST(UserContextStatusUtilTest, NoOpToAttachUserContextIdToOkStatus) {
   absl::Status status;
   const UserContextId kUserContextId(100);
   absl::Status new_status = AttachUserContextId(status, kUserContextId);
-  TF_EXPECT_OK(new_status);
+  EXPECT_OK(new_status);
   std::optional<absl::Cord> payload =
       new_status.GetPayload(kIfrtUserContextPayloadUrl);
   ASSERT_FALSE(payload.has_value());
@@ -124,7 +124,7 @@ TEST(UserContextStatusUtilTest, NoOpToAttachUserContextRefToOkStatus) {
   const UserContextId kUserContextId(100);
   absl::Status new_status =
       AttachUserContextRef(status, TestUserContext::Create(kUserContextId));
-  TF_EXPECT_OK(new_status);
+  EXPECT_OK(new_status);
   std::optional<absl::Cord> payload =
       new_status.GetPayload(kIfrtUserContextPayloadUrl);
   ASSERT_FALSE(payload.has_value());
@@ -177,7 +177,7 @@ TEST(UserContextStatusUtilTest,
      NoOpToReattachUserContextRefsWithLiveUserContextRefsToOkStatus) {
   absl::Status status;
   absl::Status new_status = ReattachUserContextRefs(std::move(status));
-  TF_EXPECT_OK(new_status);
+  EXPECT_OK(new_status);
   std::optional<absl::Cord> payload =
       new_status.GetPayload(kIfrtUserContextPayloadUrl);
   ASSERT_FALSE(payload.has_value());

@@ -67,7 +67,7 @@ TEST_F(CpuFFITest, EmulateImpureCallbackWithTokens) {
   instr->set_custom_call_has_side_effect(true);
   module->AddEntryComputation(builder.Build());
 
-  TF_EXPECT_OK(Execute(std::move(module), {}));
+  EXPECT_OK(Execute(std::move(module), {}));
 }
 
 }  // namespace

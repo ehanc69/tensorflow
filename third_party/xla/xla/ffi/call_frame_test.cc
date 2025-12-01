@@ -89,7 +89,7 @@ TEST(CallFrameTest, UpdateCallFrame) {
     EXPECT_EQ(ffi_call_frame.attrs.size, 2);
   }
 
-  TF_ASSERT_OK(updated_call_frame.UpdateWithBuffers({mem0}, {mem1}));
+  ASSERT_OK(updated_call_frame.UpdateWithBuffers({mem0}, {mem1}));
 
   {  // Construct XLA_FFI_CallFrame from the call frame updated in place.
     XLA_FFI_CallFrame ffi_call_frame = updated_call_frame.Build(

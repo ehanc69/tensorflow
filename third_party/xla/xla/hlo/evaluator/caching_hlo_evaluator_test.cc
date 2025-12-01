@@ -68,12 +68,12 @@ class MockHloEvaluator : public HloEvaluatorInterface {
 class CachingHloEvaluatorTest : public ::testing::Test {
  public:
   void SetUp() override {
-    TF_ASSERT_OK(tsl::Env::Default()->CreateDir(cache_dir_));
+    ASSERT_OK(tsl::Env::Default()->CreateDir(cache_dir_));
   }
   void TearDown() override {
     int64_t num_files_deleted = 0;
     int64_t num_dirs_deleted = 0;
-    TF_ASSERT_OK(tsl::Env::Default()->DeleteRecursively(
+    ASSERT_OK(tsl::Env::Default()->DeleteRecursively(
         cache_dir_, &num_files_deleted, &num_dirs_deleted));
   }
 
@@ -123,17 +123,17 @@ TEST_F(CachingHloEvaluatorTest, WriteToCacheRepeatedly) {
 
   // For each unique invocation, we expect a new file to be written.
   ASSERT_THAT(ChildCount(), IsOkAndHolds(0));
-  TF_ASSERT_OK(evaluator->Evaluate(*computation, {}));
+  ASSERT_OK(evaluator->Evaluate(*computation, {}));
   ASSERT_THAT(ChildCount(), IsOkAndHolds(1));
-  TF_ASSERT_OK(evaluator->Evaluate(*computation, {&arg0}));
+  ASSERT_OK(evaluator->Evaluate(*computation, {&arg0}));
   ASSERT_THAT(ChildCount(), IsOkAndHolds(2));
-  TF_ASSERT_OK(evaluator->Evaluate(*computation, {&arg1}));
+  ASSERT_OK(evaluator->Evaluate(*computation, {&arg1}));
   ASSERT_THAT(ChildCount(), IsOkAndHolds(3));
-  TF_ASSERT_OK(evaluator->Evaluate(*computation, {&arg0, &arg1}));
+  ASSERT_OK(evaluator->Evaluate(*computation, {&arg0, &arg1}));
   ASSERT_THAT(ChildCount(), IsOkAndHolds(4));
 
   // Repeated invocations do not affect the cache.
-  TF_ASSERT_OK(evaluator->Evaluate(*computation, {&arg1}));
+  ASSERT_OK(evaluator->Evaluate(*computation, {&arg1}));
   ASSERT_THAT(ChildCount(), IsOkAndHolds(4));
 }
 

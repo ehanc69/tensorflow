@@ -410,7 +410,7 @@ ENTRY main {
   TF_ASSERT_OK_AND_ASSIGN(auto module, ParseAndReturnVerifiedModule(hlo));
   const HloComputation* main = module->GetComputationWithName("main");
   const HloInstruction* while_instr = main->root_instruction();
-  TF_EXPECT_OK(
+  EXPECT_OK(
       WhileUtil::IncrementWhileLoopTripCount(*while_instr, /*increment=*/1));
 
   const HloComputation* cond = module->GetComputationWithName("cond");
@@ -448,7 +448,7 @@ ENTRY main {
   TF_ASSERT_OK_AND_ASSIGN(auto module, ParseAndReturnVerifiedModule(hlo));
   const HloComputation* main = module->GetComputationWithName("main");
   const HloInstruction* while_instr = main->root_instruction();
-  TF_EXPECT_OK(
+  EXPECT_OK(
       WhileUtil::IncrementWhileLoopTripCount(*while_instr, /*increment=*/1));
 
   const HloComputation* cond = module->GetComputationWithName("cond");

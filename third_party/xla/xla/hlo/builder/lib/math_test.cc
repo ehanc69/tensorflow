@@ -291,7 +291,7 @@ TEST_F(MathTest, RealFpOnlyOps) {
       test.first(p);
 
       if (primitive_util::IsFloatingPointType(ty)) {
-        TF_EXPECT_OK(b.first_error());
+        EXPECT_OK(b.first_error());
       } else {
         EXPECT_FALSE(b.first_error().ok());
       }

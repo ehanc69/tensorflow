@@ -1555,9 +1555,8 @@ class FlashAttentionBMMScaleSoftmaxDropoutBMM
         std::unique_ptr<HloModule> module,
         ParseAndReturnVerifiedModule(
             kModuleFlashAttentionTrainingBMM1SoftmaxDropoutBMM2HloStringBF16));
-    TF_EXPECT_OK(
-        Execute(std::move(module), {&lhs_bmm1_literal, &rhs_bmm1_literal,
-                                    &rhs_bmm2_literal, &do_literal}));
+    EXPECT_OK(Execute(std::move(module), {&lhs_bmm1_literal, &rhs_bmm1_literal,
+                                          &rhs_bmm2_literal, &do_literal}));
   }
 };
 

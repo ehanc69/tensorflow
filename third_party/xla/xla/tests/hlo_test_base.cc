@@ -191,7 +191,7 @@ void HloTestBase::MatchOptimizedHlo(absl::string_view hlo,
   print_opts.set_print_operand_shape(print_operand_shape);
   absl::StatusOr<bool> filecheck_result =
       RunFileCheck(optimized_module->ToString(print_opts), pattern);
-  TF_ASSERT_OK(filecheck_result.status());
+  ASSERT_OK(filecheck_result.status());
   EXPECT_TRUE(filecheck_result.value());
 }
 

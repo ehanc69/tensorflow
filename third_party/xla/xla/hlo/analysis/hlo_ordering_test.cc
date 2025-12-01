@@ -438,7 +438,7 @@ TEST_F(HloOrderingTest,
 
   HloSchedule schedule(module.get());
   schedule.set_sequence(entry, {param, root, dead});
-  TF_ASSERT_OK(schedule.Verify());
+  ASSERT_OK(schedule.Verify());
   SequentialHloOrdering ordering(schedule);
 
   TF_ASSERT_OK_AND_ASSIGN(auto dataflow,
@@ -494,7 +494,7 @@ TEST_F(HloOrderingTest,
   HloSchedule schedule(module.get());
   schedule.set_sequence(subcomputation, {param, root, dead});
   schedule.set_sequence(entry, {c, call});
-  TF_ASSERT_OK(schedule.Verify());
+  ASSERT_OK(schedule.Verify());
   SequentialHloOrdering ordering(schedule);
 
   TF_ASSERT_OK_AND_ASSIGN(auto dataflow,

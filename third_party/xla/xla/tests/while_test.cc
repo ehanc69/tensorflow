@@ -1252,9 +1252,9 @@ TEST_F(WhileTest, WhileInfeedCondition) {
   XlaBuilder builder(TestName());
   While(condition, body, ConstantR0<int32_t>(&builder, 0));
 
-  TF_ASSERT_OK(client_->TransferToInfeed(LiteralUtil::CreateR0<bool>(true)));
-  TF_ASSERT_OK(client_->TransferToInfeed(LiteralUtil::CreateR0<bool>(true)));
-  TF_ASSERT_OK(client_->TransferToInfeed(LiteralUtil::CreateR0<bool>(false)));
+  ASSERT_OK(client_->TransferToInfeed(LiteralUtil::CreateR0<bool>(true)));
+  ASSERT_OK(client_->TransferToInfeed(LiteralUtil::CreateR0<bool>(true)));
+  ASSERT_OK(client_->TransferToInfeed(LiteralUtil::CreateR0<bool>(false)));
 
   ComputeAndCompareR0<int32_t>(&builder, 2, {});
 }

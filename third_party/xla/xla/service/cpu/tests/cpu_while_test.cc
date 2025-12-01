@@ -281,7 +281,7 @@ TEST_F(CpuCodegenTest, WhileDotDoesNotError) {
 
   // No need to check the values of the Literal, just that it returns a valid
   // result.
-  TF_EXPECT_OK(Execute(module->Clone(), {&input_real, &input_imag}));
+  EXPECT_OK(Execute(module->Clone(), {&input_real, &input_imag}));
 }
 
 }  // namespace

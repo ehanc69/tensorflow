@@ -32,13 +32,13 @@ namespace {
 TEST(StaticRegistrationTest, RegisterStaticPjrtPluginSucceeds) {
   constexpr absl::string_view kPluginName = "test_plugin_succeeds";
   auto plugin_api = std::make_unique<PJRT_Api>();
-  TF_EXPECT_OK(RegisterStaticPjrtPlugin(kPluginName, plugin_api.get()));
+  EXPECT_OK(RegisterStaticPjrtPlugin(kPluginName, plugin_api.get()));
 }
 
 TEST(StaticRegistrationTest, RegisterStaticPjrtPluginTwiceFails) {
   constexpr absl::string_view kPluginName = "test_plugin_second_time";
   auto plugin_api = std::make_unique<PJRT_Api>();
-  TF_EXPECT_OK(RegisterStaticPjrtPlugin(kPluginName, plugin_api.get()));
+  EXPECT_OK(RegisterStaticPjrtPlugin(kPluginName, plugin_api.get()));
   EXPECT_TRUE(absl::IsAlreadyExists(
       RegisterStaticPjrtPlugin(kPluginName, plugin_api.get())));
 }

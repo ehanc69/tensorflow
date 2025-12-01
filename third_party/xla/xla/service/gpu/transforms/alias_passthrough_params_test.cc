@@ -72,9 +72,9 @@ TEST_F(AliasPassthroughParamsTest, PresetAliases) {
   // Presetting an alias for p0 -> Sum. This could happen in a case of
   // `alias_resource_update`.
   auto& preset_alias = module->input_output_alias_config();
-  TF_EXPECT_OK(preset_alias.SetUpAlias(/*output_index=*/{1},
-                                       /*param_number=*/0,
-                                       /*param_index=*/{}));
+  EXPECT_OK(preset_alias.SetUpAlias(/*output_index=*/{1},
+                                    /*param_number=*/0,
+                                    /*param_index=*/{}));
 
   EXPECT_TRUE(AliasPassthroughParams().Run(module.get()).value());
   const auto& alias_result = module->input_output_alias_config();

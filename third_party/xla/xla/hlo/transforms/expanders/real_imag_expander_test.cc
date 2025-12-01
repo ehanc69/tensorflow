@@ -119,8 +119,7 @@ TEST_F(RealImagExpanderTest, MultipleImagWithNonComplexInput) {
       module->entry_computation()->root_instruction()->mutable_operand(0);
   TF_ASSERT_OK_AND_ASSIGN(HloInstruction * new_imag,
                           MakeUnaryHlo(HloOpcode::kImag, param));
-  TF_ASSERT_OK(
-      module->entry_computation()->ReplaceInstruction(imag1, new_imag));
+  ASSERT_OK(module->entry_computation()->ReplaceInstruction(imag1, new_imag));
 
   RealImagExpander expander;
   TF_ASSERT_OK_AND_ASSIGN(bool result, RunHloPass(&expander, module.get()));

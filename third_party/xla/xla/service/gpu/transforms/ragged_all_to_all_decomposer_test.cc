@@ -55,8 +55,8 @@ ENTRY main {
   RaggedAllToAllDecomposer decomposer;
   TF_ASSERT_OK_AND_ASSIGN(bool changed, decomposer.Run(module.get(), {}));
   EXPECT_TRUE(changed);
-  TF_EXPECT_OK(VerifyHloModule(module.get(), true, true));
-  TF_EXPECT_OK(HloCSE(true).Run(module.get()));
+  EXPECT_OK(VerifyHloModule(module.get(), true, true));
+  EXPECT_OK(HloCSE(true).Run(module.get()));
 
   EXPECT_TRUE(*RunFileCheck(module->ToString(), R"(
     // CHECK: s64[2,1]{1,0} all-to-all
@@ -95,8 +95,8 @@ ENTRY main {
   RaggedAllToAllDecomposer decomposer;
   TF_ASSERT_OK_AND_ASSIGN(bool changed, decomposer.Run(module.get(), {}));
   EXPECT_TRUE(changed);
-  TF_EXPECT_OK(VerifyHloModule(module.get(), true, true));
-  TF_EXPECT_OK(HloCSE(true).Run(module.get()));
+  EXPECT_OK(VerifyHloModule(module.get(), true, true));
+  EXPECT_OK(HloCSE(true).Run(module.get()));
 
   EXPECT_TRUE(*RunFileCheck(module->ToString(), R"(
     // CHECK: s64[2,1]{1,0} all-to-all
@@ -135,8 +135,8 @@ ENTRY main {
   RaggedAllToAllDecomposer decomposer;
   TF_ASSERT_OK_AND_ASSIGN(bool changed, decomposer.Run(module.get(), {}));
   EXPECT_TRUE(changed);
-  TF_EXPECT_OK(VerifyHloModule(module.get(), true, true));
-  TF_EXPECT_OK(HloCSE(true).Run(module.get()));
+  EXPECT_OK(VerifyHloModule(module.get(), true, true));
+  EXPECT_OK(HloCSE(true).Run(module.get()));
 
   EXPECT_TRUE(*RunFileCheck(module->ToString(), R"(
     // CHECK: dynamic-slice
@@ -174,8 +174,8 @@ ENTRY main {
   RaggedAllToAllDecomposer decomposer;
   TF_ASSERT_OK_AND_ASSIGN(bool changed, decomposer.Run(module.get(), {}));
   EXPECT_TRUE(changed);
-  TF_EXPECT_OK(VerifyHloModule(module.get(), true, true));
-  TF_EXPECT_OK(HloCSE(true).Run(module.get()));
+  EXPECT_OK(VerifyHloModule(module.get(), true, true));
+  EXPECT_OK(HloCSE(true).Run(module.get()));
 
   EXPECT_TRUE(
       *RunFileCheck(module->ToString(HloPrintOptions::ShortParsable()), R"(

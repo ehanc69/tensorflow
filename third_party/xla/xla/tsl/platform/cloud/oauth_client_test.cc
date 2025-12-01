@@ -57,8 +57,8 @@ TEST(OAuthClientTest, ParseOAuthResponse) {
   const uint64_t request_timestamp = 100;
   std::string token;
   uint64_t expiration_timestamp;
-  TF_EXPECT_OK(OAuthClient().ParseOAuthResponse(kTokenJson, request_timestamp,
-                                                &token, &expiration_timestamp));
+  EXPECT_OK(OAuthClient().ParseOAuthResponse(kTokenJson, request_timestamp,
+                                             &token, &expiration_timestamp));
   EXPECT_EQ("WITH_FAKE_ACCESS_TOKEN_TEST_SHOULD_BE_HAPPY", token);
   EXPECT_EQ(4020, expiration_timestamp);
 }
@@ -87,7 +87,7 @@ TEST(OAuthClientTest, GetTokenFromRefreshTokenJson) {
                      &env);
   std::string token;
   uint64_t expiration_timestamp;
-  TF_EXPECT_OK(client.GetTokenFromRefreshTokenJson(
+  EXPECT_OK(client.GetTokenFromRefreshTokenJson(
       json, "https://www.googleapis.com/oauth2/v3/token", &token,
       &expiration_timestamp));
   EXPECT_EQ("WITH_FAKE_ACCESS_TOKEN_TEST_SHOULD_BE_HAPPY", token);
@@ -112,7 +112,7 @@ TEST(OAuthClientTest, GetTokenFromServiceAccountJson) {
                      &env);
   std::string token;
   uint64_t expiration_timestamp;
-  TF_EXPECT_OK(client.GetTokenFromServiceAccountJson(
+  EXPECT_OK(client.GetTokenFromServiceAccountJson(
       json, "https://www.googleapis.com/oauth2/v3/token",
       "https://test-token-scope.com", &token, &expiration_timestamp));
   EXPECT_EQ("WITH_FAKE_ACCESS_TOKEN_TEST_SHOULD_BE_HAPPY", token);
@@ -153,7 +153,7 @@ TEST(OAuthClientTest, GetTokenFromServiceAccountJson) {
 
   // Deserialize the signature.
   std::string signature;
-  TF_EXPECT_OK(Base64Decode(signature_encoded, &signature));
+  EXPECT_OK(Base64Decode(signature_encoded, &signature));
 
   // Actually cryptographically verify the signature.
   const auto md = EVP_sha256();
@@ -182,8 +182,8 @@ TEST(OAuthClientTest, GetTokenFromServiceAccountJson) {
   std::string claim_encoded = header_dot_claim.substr(dot + 1);
 
   std::string header, claim;
-  TF_EXPECT_OK(Base64Decode(header_encoded, &header));
-  TF_EXPECT_OK(Base64Decode(claim_encoded, &claim));
+  EXPECT_OK(Base64Decode(header_encoded, &header));
+  EXPECT_OK(Base64Decode(claim_encoded, &claim));
 
   Json::Value header_json, claim_json;
   EXPECT_TRUE(reader.parse(header, header_json));

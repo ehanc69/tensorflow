@@ -1266,7 +1266,7 @@ TEST_F(CollectiveOpsTestE2E, HostMemoryOffloadingWithDonation) {
   TF_ASSERT_OK_AND_ASSIGN(auto module,
                           ParseAndReturnUnverifiedModule(kModuleStr, config));
 
-  TF_ASSERT_OK(module->input_output_alias_config().SetUpAlias(
+  ASSERT_OK(module->input_output_alias_config().SetUpAlias(
       /*output_index=*/{},
       /*param_number=*/0,
       /*param_index=*/{},

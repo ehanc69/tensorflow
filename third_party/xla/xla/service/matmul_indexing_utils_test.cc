@@ -115,7 +115,7 @@ TEST(DotOperandDimsTest, CollapseRemoveIfEmpty) {
   DotOperandDims dims(shape, /*batch_dims=*/{3, 2, 4},
                       /*non_contracting_dims=*/{0},
                       /*contracting_dims=*/{1, 5});
-  TF_ASSERT_OK(dims.Collapse(DotOperandDims::kBatch, /*remove_if_empty=*/true));
+  ASSERT_OK(dims.Collapse(DotOperandDims::kBatch, /*remove_if_empty=*/true));
   EXPECT_EQ(dims.shape(), ParseShape("f32[2,3,6]").value());
   EXPECT_THAT(dims.DimensionIndices(DotOperandDims::kBatch), ElementsAre());
   EXPECT_THAT(dims.DimensionIndices(DotOperandDims::kNonContracting),
@@ -129,8 +129,7 @@ TEST(DotOperandDimsTest, CollapseKeepIfEmpty) {
   DotOperandDims dims(shape, /*batch_dims=*/{3, 2, 4},
                       /*non_contracting_dims=*/{0},
                       /*contracting_dims=*/{1, 5});
-  TF_ASSERT_OK(
-      dims.Collapse(DotOperandDims::kBatch, /*remove_if_empty=*/false));
+  ASSERT_OK(dims.Collapse(DotOperandDims::kBatch, /*remove_if_empty=*/false));
   EXPECT_EQ(dims.shape(), ParseShape("f32[2,3,1,6]").value());
   EXPECT_THAT(dims.DimensionIndices(DotOperandDims::kBatch), ElementsAre(2));
   EXPECT_THAT(dims.DimensionIndices(DotOperandDims::kNonContracting),
@@ -144,8 +143,7 @@ TEST(DotOperandDimsTest, CollapseEmptyKeepIfEmpty) {
   DotOperandDims dims(shape, /*batch_dims=*/{},
                       /*non_contracting_dims=*/{0},
                       /*contracting_dims=*/{1, 2});
-  TF_ASSERT_OK(
-      dims.Collapse(DotOperandDims::kBatch, /*remove_if_empty=*/false));
+  ASSERT_OK(dims.Collapse(DotOperandDims::kBatch, /*remove_if_empty=*/false));
   EXPECT_EQ(dims.shape(), ParseShape("f32[2,4,6]").value());
   EXPECT_THAT(dims.DimensionIndices(DotOperandDims::kBatch), ElementsAre());
   EXPECT_THAT(dims.DimensionIndices(DotOperandDims::kNonContracting),
@@ -159,7 +157,7 @@ TEST(DotOperandDimsTest, CollapseNormalCase) {
   DotOperandDims dims(shape, /*batch_dims=*/{0},
                       /*non_contracting_dims=*/{1, 5},
                       /*contracting_dims=*/{4, 3, 2});
-  TF_ASSERT_OK(
+  ASSERT_OK(
       dims.Collapse(DotOperandDims::kContracting, /*remove_if_empty=*/false));
   EXPECT_EQ(dims.shape(), ParseShape("f32[10,2,60,6]").value());
   EXPECT_THAT(dims.DimensionIndices(DotOperandDims::kBatch), ElementsAre(0));
@@ -174,7 +172,7 @@ TEST(DotOperandDimsTest, EraseDimensions) {
   DotOperandDims dims(shape, /*batch_dims=*/{0, 5},
                       /*non_contracting_dims=*/{1, 3},
                       /*contracting_dims=*/{4, 2});
-  TF_ASSERT_OK(dims.EraseDimensions(0, 4));
+  ASSERT_OK(dims.EraseDimensions(0, 4));
   EXPECT_EQ(dims.shape(), ParseShape("f32[50,60]").value());
   EXPECT_THAT(dims.DimensionIndices(DotOperandDims::kBatch), ElementsAre(1));
   EXPECT_THAT(dims.DimensionIndices(DotOperandDims::kNonContracting),
@@ -198,7 +196,7 @@ TEST(DotOperandDimsTest, InsertDimensionIntoEmptyCategory) {
   DotOperandDims dims(shape, /*batch_dims=*/{},
                       /*non_contracting_dims=*/{0, 1},
                       /*contracting_dims=*/{2});
-  TF_ASSERT_OK(dims.InsertDimension(DotOperandDims::kBatch, 3, 40));
+  ASSERT_OK(dims.InsertDimension(DotOperandDims::kBatch, 3, 40));
   EXPECT_EQ(dims.shape(), ParseShape("f32[10,20,30,40]").value());
   EXPECT_THAT(dims.DimensionIndices(DotOperandDims::kBatch), ElementsAre(3));
   EXPECT_THAT(dims.DimensionIndices(DotOperandDims::kNonContracting),
@@ -212,7 +210,7 @@ TEST(DotOperandDimsTest, InsertDimensionIntoNonEmptyCategory) {
   DotOperandDims dims(shape, /*batch_dims=*/{0},
                       /*non_contracting_dims=*/{1},
                       /*contracting_dims=*/{2});
-  TF_ASSERT_OK(dims.InsertDimension(DotOperandDims::kBatch, 3, 40));
+  ASSERT_OK(dims.InsertDimension(DotOperandDims::kBatch, 3, 40));
   EXPECT_EQ(dims.shape(), ParseShape("f32[10,20,30,40]").value());
   EXPECT_THAT(dims.DimensionIndices(DotOperandDims::kBatch), ElementsAre(0, 3));
   EXPECT_THAT(dims.DimensionIndices(DotOperandDims::kNonContracting),
@@ -226,7 +224,7 @@ TEST(DotOperandDimsTest, InsertDimensionIntoFirstCategory) {
   DotOperandDims dims(shape, /*batch_dims=*/{0},
                       /*non_contracting_dims=*/{1},
                       /*contracting_dims=*/{2});
-  TF_ASSERT_OK(dims.InsertDimension(DotOperandDims::kBatch, 0, 40));
+  ASSERT_OK(dims.InsertDimension(DotOperandDims::kBatch, 0, 40));
   EXPECT_EQ(dims.shape(), ParseShape("f32[40,10,20,30]").value());
   EXPECT_THAT(dims.DimensionIndices(DotOperandDims::kBatch), ElementsAre(0, 1));
   EXPECT_THAT(dims.DimensionIndices(DotOperandDims::kNonContracting),
@@ -240,7 +238,7 @@ TEST(DotOperandDimsTest, InsertDimensionIntoLastCategory) {
   DotOperandDims dims(shape, /*batch_dims=*/{0},
                       /*non_contracting_dims=*/{1},
                       /*contracting_dims=*/{2});
-  TF_ASSERT_OK(dims.InsertDimension(DotOperandDims::kContracting, 3, 40));
+  ASSERT_OK(dims.InsertDimension(DotOperandDims::kContracting, 3, 40));
   EXPECT_EQ(dims.shape(), ParseShape("f32[10,20,30,40]").value());
   EXPECT_THAT(dims.DimensionIndices(DotOperandDims::kBatch), ElementsAre(0));
   EXPECT_THAT(dims.DimensionIndices(DotOperandDims::kNonContracting),
@@ -254,7 +252,7 @@ TEST(DotOperandDimsTest, InsertDimensionIntoMiddleCategory) {
   DotOperandDims dims(shape, /*batch_dims=*/{0},
                       /*non_contracting_dims=*/{1},
                       /*contracting_dims=*/{2});
-  TF_ASSERT_OK(dims.InsertDimension(DotOperandDims::kNonContracting, 1, 40));
+  ASSERT_OK(dims.InsertDimension(DotOperandDims::kNonContracting, 1, 40));
   EXPECT_EQ(dims.shape(), ParseShape("f32[10,40,20,30]").value());
   EXPECT_THAT(dims.DimensionIndices(DotOperandDims::kBatch), ElementsAre(0));
   EXPECT_THAT(dims.DimensionIndices(DotOperandDims::kNonContracting),

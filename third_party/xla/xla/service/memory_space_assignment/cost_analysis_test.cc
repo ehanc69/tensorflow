@@ -92,7 +92,7 @@ TEST_F(MemorySpaceAssignmentCostAnalysisTest, NoPipelineOverhead) {
   )";
   TF_ASSERT_OK_AND_ASSIGN(auto module,
                           ParseAndReturnVerifiedModule(hlo_string));
-  TF_ASSERT_OK(Initialize(module.get()));
+  ASSERT_OK(Initialize(module.get()));
 
   const HloInstruction* add = module->entry_computation()->root_instruction();
   const float expected_compute_elapsed = std::max(
@@ -162,7 +162,7 @@ TEST_F(MemorySpaceAssignmentCostAnalysisTest, PipelineOverhead) {
   TF_ASSERT_OK_AND_ASSIGN(auto module,
                           ParseAndReturnVerifiedModule(hlo_string));
   // Set the window size 64B.
-  TF_ASSERT_OK(
+  ASSERT_OK(
       Initialize(module.get(),
                  /*pipeline_overhead_window_size_mib=*/(64.0 / 1024 / 1024)));
 
@@ -249,7 +249,7 @@ TEST_F(MemorySpaceAssignmentCostAnalysisTest, LatencyBoundCompute) {
   )";
   TF_ASSERT_OK_AND_ASSIGN(auto module,
                           ParseAndReturnVerifiedModule(hlo_string));
-  TF_ASSERT_OK(Initialize(module.get()));
+  ASSERT_OK(Initialize(module.get()));
 
   const HloInstruction* add = module->entry_computation()->root_instruction();
   EXPECT_EQ(cost_analysis_->GetInstructionElapsedDueToCompute(*add), 1.0f);

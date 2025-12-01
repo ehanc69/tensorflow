@@ -43,7 +43,7 @@ TEST(DeviceInfoTest, DeviceInfoMatches) {
         "h100_pcie", "h100_sxm", "p100", "v100", "mi200"}) {
     GpuTargetConfigProto proto;
     std::string spec_string;
-    TF_ASSERT_OK(tsl::ReadFileToString(
+    ASSERT_OK(tsl::ReadFileToString(
         tsl::Env::Default(),
         tsl::io::JoinPath(tsl::testing::XlaSrcRoot(), "tools", "hlo_opt",
                           "gpu_specs", absl::StrCat(file_name, ".txtpb")),

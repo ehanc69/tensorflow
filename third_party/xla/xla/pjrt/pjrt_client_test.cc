@@ -555,7 +555,7 @@ TEST(PjRtClientTest, FulfillAliasBuffer) {
           client->memory_spaces()[0], /*device_layout=*/nullptr));
 
   ASSERT_NE(alias_buffer.second, nullptr);
-  TF_ASSERT_OK(std::move(alias_buffer.second)(param.get()));
+  ASSERT_OK(std::move(alias_buffer.second)(param.get()));
   TF_ASSERT_OK_AND_ASSIGN(auto shared_literal, future.Await());
 
   std::vector<int32_t> expected = {1, 2, 3, 4, 5, 6};

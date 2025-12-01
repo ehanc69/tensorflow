@@ -42,10 +42,10 @@ TEST_F(ComputeEngineZoneProviderTest, GetZone) {
 
   std::string zone;
 
-  TF_EXPECT_OK(provider.GetZone(&zone));
+  EXPECT_OK(provider.GetZone(&zone));
   EXPECT_EQ("us-west1-b", zone);
   // Test caching, should be no further requests
-  TF_EXPECT_OK(provider.GetZone(&zone));
+  EXPECT_OK(provider.GetZone(&zone));
 }
 
 TEST_F(ComputeEngineZoneProviderTest, InvalidZoneString) {
@@ -63,7 +63,7 @@ TEST_F(ComputeEngineZoneProviderTest, InvalidZoneString) {
 
   std::string zone;
 
-  TF_EXPECT_OK(provider.GetZone(&zone));
+  EXPECT_OK(provider.GetZone(&zone));
   EXPECT_EQ("", zone);
 }
 

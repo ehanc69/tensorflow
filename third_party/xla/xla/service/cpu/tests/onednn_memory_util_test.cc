@@ -97,7 +97,7 @@ TEST_P(MemoryUtilTest, VerifyMemRefTest) {
 
   absl::StatusOr<bool> match =
       RunFileCheck(filecheck_input, GetMemRefTestPattern(shape));
-  TF_ASSERT_OK(match.status());
+  ASSERT_OK(match.status());
   EXPECT_TRUE(match.value());
 }
 

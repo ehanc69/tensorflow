@@ -40,7 +40,7 @@ TEST(XlaCompileTest, LoadCpuExecutable) {
   std::string path = tsl::io::JoinPath(tsl::testing::XlaSrcRoot(), "service",
                                        "xla_aot_compile_test_cpu_executable");
   std::string serialized_aot_result;
-  TF_ASSERT_OK(
+  ASSERT_OK(
       tsl::ReadFileToString(tsl::Env::Default(), path, &serialized_aot_result));
 
   // Get a LocalClient

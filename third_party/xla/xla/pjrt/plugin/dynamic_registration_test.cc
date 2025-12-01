@@ -34,7 +34,7 @@ namespace {
 TEST(DynamicRegistrationTest, RegisteredDynamicPjrtPluginSucceeds) {
   absl::StatusOr<std::unique_ptr<xla::PjRtClient>> c_api_client =
       xla::GetCApiClient("myplugin");
-  TF_EXPECT_OK(c_api_client);
+  EXPECT_OK(c_api_client);
 }
 
 TEST(DynamicRegistrationTest, RegistrationFailsWithoutEnvVar) {

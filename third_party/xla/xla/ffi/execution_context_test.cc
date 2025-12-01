@@ -39,8 +39,8 @@ struct StrUserData {
 
 TEST(ExecutionContextTest, EmplaceUserData) {
   ExecutionContext context;
-  TF_ASSERT_OK(context.Emplace<I32UserData>(42));
-  TF_ASSERT_OK(context.Emplace<StrUserData>("hello"));
+  ASSERT_OK(context.Emplace<I32UserData>(42));
+  ASSERT_OK(context.Emplace<StrUserData>("hello"));
 
   TF_ASSERT_OK_AND_ASSIGN(auto* i32_data, context.Lookup<I32UserData>());
   TF_ASSERT_OK_AND_ASSIGN(auto* str_data, context.Lookup<StrUserData>());
@@ -55,7 +55,7 @@ TEST(ExecutionContextTest, InsertUserOwned) {
   I32UserData user_data(42);
 
   ExecutionContext context;
-  TF_ASSERT_OK(context.Insert(&user_data));
+  ASSERT_OK(context.Insert(&user_data));
 
   TF_ASSERT_OK_AND_ASSIGN(auto* i32_data, context.Lookup<I32UserData>());
   ASSERT_EQ(i32_data, &user_data);
@@ -69,7 +69,7 @@ TEST(ExecutionContextTest, InsertUserOwnedWithTypeId) {
   I32UserData user_data(42);
 
   ExecutionContext context;
-  TF_ASSERT_OK(context.Insert(type_id, &user_data));
+  ASSERT_OK(context.Insert(type_id, &user_data));
 
   TF_ASSERT_OK_AND_ASSIGN(auto* i32_data, context.Lookup(type_id));
   ASSERT_EQ(i32_data, &user_data);

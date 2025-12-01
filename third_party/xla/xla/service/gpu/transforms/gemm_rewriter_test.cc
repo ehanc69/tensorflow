@@ -142,7 +142,7 @@ ENTRY AddDotsFunc {
                    R"(
 ; CHECK:    custom_call_target="__cublas${{(lt\$matmul|gemm)}}"
     )");
-  TF_ASSERT_OK(filecheck_result.status());
+  ASSERT_OK(filecheck_result.status());
   EXPECT_TRUE(filecheck_result.value());
   EXPECT_TRUE(RunAndCompare(*get_module(), ErrorSpec{1e-3, 1e-3}));
 }

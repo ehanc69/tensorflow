@@ -685,7 +685,7 @@ TEST_F(IsSolLatencyEstimatorEnabledTest, DisabledForHopperWithHostOffloaded) {
       stream_executor::CudaComputeCapability::Hopper());
 
   auto module = CreateTestModule(config);
-  TF_ASSERT_OK(AddHostOffloaded(module.get()));
+  ASSERT_OK(AddHostOffloaded(module.get()));
 
   EXPECT_FALSE(
       SolLatencyEstimator::IsSupportedForModule(*module, gpu_device_info_));

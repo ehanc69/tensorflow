@@ -48,9 +48,8 @@ ENTRY main {
 
   DynamicParameterBinding binding;
 
-  TF_EXPECT_OK(
-      binding.Bind(DynamicParameterBinding::DynamicSizeParameter{0, {}},
-                   DynamicParameterBinding::DynamicDimension{1, {}, 0}));
+  EXPECT_OK(binding.Bind(DynamicParameterBinding::DynamicSizeParameter{0, {}},
+                         DynamicParameterBinding::DynamicDimension{1, {}, 0}));
 
   auto test = [&](const DynamicParameterBinding& binding) {
     std::optional<DynamicParameterBinding::DynamicSizeParameter> param =
@@ -61,7 +60,7 @@ ENTRY main {
     EXPECT_TRUE(param);
     EXPECT_EQ(param->parameter_num, 0);
     EXPECT_EQ(param->parameter_index, ShapeIndex({}));
-    TF_EXPECT_OK(binding.Verify(*module->entry_computation()));
+    EXPECT_OK(binding.Verify(*module->entry_computation()));
   };
   test(binding);
 }
@@ -84,9 +83,8 @@ ENTRY main {
 
   DynamicParameterBinding binding;
 
-  TF_EXPECT_OK(
-      binding.Bind(DynamicParameterBinding::DynamicSizeParameter{0, {0}},
-                   DynamicParameterBinding::DynamicDimension{0, {1}, 0}));
+  EXPECT_OK(binding.Bind(DynamicParameterBinding::DynamicSizeParameter{0, {0}},
+                         DynamicParameterBinding::DynamicDimension{0, {1}, 0}));
 
   auto test = [&](const DynamicParameterBinding& binding) {
     std::optional<DynamicParameterBinding::DynamicSizeParameter> param =
@@ -98,7 +96,7 @@ ENTRY main {
     EXPECT_TRUE(param);
     EXPECT_EQ(param->parameter_num, 0);
     EXPECT_EQ(param->parameter_index, ShapeIndex({0}));
-    TF_EXPECT_OK(binding.Verify(*module->entry_computation()));
+    EXPECT_OK(binding.Verify(*module->entry_computation()));
   };
   test(binding);
 }
@@ -121,13 +119,11 @@ ENTRY main {
 
   DynamicParameterBinding binding;
 
-  TF_EXPECT_OK(
-      binding.Bind(DynamicParameterBinding::DynamicSizeParameter{0, {0}},
-                   DynamicParameterBinding::DynamicDimension{0, {1}, 0}));
+  EXPECT_OK(binding.Bind(DynamicParameterBinding::DynamicSizeParameter{0, {0}},
+                         DynamicParameterBinding::DynamicDimension{0, {1}, 0}));
 
-  TF_EXPECT_OK(
-      binding.Bind(DynamicParameterBinding::DynamicSizeParameter{0, {0}},
-                   DynamicParameterBinding::DynamicDimension{0, {1}, 1}));
+  EXPECT_OK(binding.Bind(DynamicParameterBinding::DynamicSizeParameter{0, {0}},
+                         DynamicParameterBinding::DynamicDimension{0, {1}, 1}));
 
   auto test = [&](const DynamicParameterBinding& binding) {
     std::optional<DynamicParameterBinding::DynamicSizeParameter> param =
@@ -149,7 +145,7 @@ ENTRY main {
     EXPECT_TRUE(param2);
     EXPECT_EQ(param2->parameter_num, 0);
     EXPECT_EQ(param2->parameter_index, ShapeIndex({0}));
-    TF_EXPECT_OK(binding.Verify(*module->entry_computation()));
+    EXPECT_OK(binding.Verify(*module->entry_computation()));
   };
 
   test(binding);

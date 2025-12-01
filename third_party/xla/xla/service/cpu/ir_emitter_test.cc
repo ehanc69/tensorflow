@@ -339,7 +339,7 @@ ENTRY main {
       auto wrapped_ir_emitter,
       CreateIrEmitterForConstantEmissionTests(*module, *llvm_module));
 
-  TF_ASSERT_OK(wrapped_ir_emitter->ir_emitter->EmitSmallConstantGlobals());
+  ASSERT_OK(wrapped_ir_emitter->ir_emitter->EmitSmallConstantGlobals());
 
   EXPECT_EQ(
       std::distance(llvm_module->global_begin(), llvm_module->global_end()),

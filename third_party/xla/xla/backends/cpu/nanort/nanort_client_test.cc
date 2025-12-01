@@ -408,7 +408,7 @@ TEST_P(NanoRtClientTest, CustomCallTest) {
   results.push_back({&result, 1});
 
   ffi::ExecutionContext context;
-  TF_ASSERT_OK(context.Emplace<StrUserData>("foo"));
+  ASSERT_OK(context.Emplace<StrUserData>("foo"));
 
   NanoRtExecutable::ExecuteOptions execute_options;
   execute_options.set_ffi_context(&context);

@@ -46,7 +46,7 @@ TEST(ExecutionStateTest, SetAndGetForInternalType) {
   }
 
   // Once set, state can be retrieved.
-  TF_ASSERT_OK(state.Set(std::make_unique<int32_t>(42)));
+  ASSERT_OK(state.Set(std::make_unique<int32_t>(42)));
   EXPECT_TRUE(state.IsSet());
 
   TF_ASSERT_OK_AND_ASSIGN(int32_t* data, state.Get<int32_t>());
@@ -76,7 +76,7 @@ TEST(ExecutionStateTest, SetAndGetForExternalType) {
   int32_t* value = new int32_t(42);
 
   // Once set, state can be retrieved.
-  TF_ASSERT_OK(state.Set(type_id, value));
+  ASSERT_OK(state.Set(type_id, value));
   EXPECT_TRUE(state.IsSet());
 
   TF_ASSERT_OK_AND_ASSIGN(void* data, state.Get(type_id));

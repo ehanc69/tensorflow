@@ -136,8 +136,8 @@ TEST(JitCompilerTest, Compile) {
     return absl::OkStatus();
   };
 
-  TF_ASSERT_OK(add_module(add_in_place_ir, "AddInplace", 0));
-  TF_ASSERT_OK(add_module(mul_in_place_ir, "MulInplace", 1));
+  ASSERT_OK(add_module(add_in_place_ir, "AddInplace", 0));
+  ASSERT_OK(add_module(mul_in_place_ir, "MulInplace", 1));
 
   using ScalarFn = void(float*);
   std::vector<FunctionLibrary::Symbol> symbols = {
@@ -223,7 +223,7 @@ TEST(JitCompilerTest, ExternalDefinitionGenerator) {
       llvm::orc::ThreadSafeModule tsm,
       ParseModule(tsc, call_external_fn_ir, "CallExternalFn"));
 
-  TF_ASSERT_OK(compiler.AddModule(std::move(tsm)));
+  ASSERT_OK(compiler.AddModule(std::move(tsm)));
 
   using ScalarFn = void(float*);
   std::vector<FunctionLibrary::Symbol> symbols = {

@@ -283,9 +283,9 @@ TEST_F(HloAliasAnalysisTest, ParametersWithAliasing) {
   module_->AddEntryComputation(builder.Build());
   SCOPED_TRACE(module_->ToString());
 
-  TF_ASSERT_OK(module_->input_output_alias_config().SetUpAlias(
+  ASSERT_OK(module_->input_output_alias_config().SetUpAlias(
       /*output_index=*/{0}, /*param_number=*/0, /*param_index=*/{0}));
-  TF_ASSERT_OK(module_->input_output_alias_config().SetUpAlias(
+  ASSERT_OK(module_->input_output_alias_config().SetUpAlias(
       /*output_index=*/{1}, /*param_number=*/0, /*param_index=*/{1}));
 
   // Cannot alias an output twice.
@@ -326,9 +326,9 @@ TEST_F(HloAliasAnalysisTest, ParametersWithCrossAliasing) {
   module_->AddEntryComputation(builder.Build());
   SCOPED_TRACE(module_->ToString());
 
-  TF_ASSERT_OK(module_->input_output_alias_config().SetUpAlias(
+  ASSERT_OK(module_->input_output_alias_config().SetUpAlias(
       /*output_index=*/{0}, /*param_number=*/0, /*param_index=*/{1}));
-  TF_ASSERT_OK(module_->input_output_alias_config().SetUpAlias(
+  ASSERT_OK(module_->input_output_alias_config().SetUpAlias(
       /*output_index=*/{1}, /*param_number=*/0, /*param_index=*/{0}));
 
   // Cannot alias an output twice.
@@ -414,9 +414,9 @@ TEST_F(HloAliasAnalysisTest, InputOutputAliasingWithWhile) {
   module_->AddEntryComputation(builder.Build());
   SCOPED_TRACE(module_->ToString());
 
-  TF_ASSERT_OK(module_->input_output_alias_config().SetUpAlias(
+  ASSERT_OK(module_->input_output_alias_config().SetUpAlias(
       /*output_index=*/{0}, /*param_number=*/0, /*param_index=*/{0}));
-  TF_ASSERT_OK(module_->input_output_alias_config().SetUpAlias(
+  ASSERT_OK(module_->input_output_alias_config().SetUpAlias(
       /*output_index=*/{1}, /*param_number=*/0, /*param_index=*/{1}));
 
   const HloAliasAnalysis& analysis = RunAnalysis();
@@ -688,7 +688,7 @@ TEST_F(HloAliasAnalysisTest, SequentialWhiles) {
   module_->AddEntryComputation(builder.Build());
 
   FlattenCallGraph flattener;
-  TF_ASSERT_OK(flattener.Run(module_.get()).status());
+  ASSERT_OK(flattener.Run(module_.get()).status());
   SCOPED_TRACE(module_->ToString());
 
   const HloAliasAnalysis& analysis = RunAnalysis();
@@ -884,8 +884,6 @@ TEST_F(HloAliasAnalysisTest, SwizzlingWhile) {
   // resulting liveness interference.
   EXPECT_TRUE(AnyValuesInSameBufferInterfere());
 }
-
-
 
 TEST_F(HloAliasAnalysisTest, Bitcast) {
   // Bitcasting a value should not produce a new buffer.

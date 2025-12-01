@@ -178,7 +178,7 @@ TEST(Layout, LayoutToFromProto) {
   auto expect_unchanged = [](const Layout& layout) {
     const auto layout_proto = layout.ToProto();
     const auto from_proto_result = Layout::FromProto(layout_proto);
-    TF_ASSERT_OK(from_proto_result);
+    ASSERT_OK(from_proto_result);
     EXPECT_EQ(layout, from_proto_result.value());
   };
 

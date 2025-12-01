@@ -634,7 +634,7 @@ TEST_F(BufferAssignmentTest, AliasedParamCanBeReused) {
   auto module = CreateNewVerifiedModule();
   module->AddEntryComputation(builder.Build());
 
-  TF_ASSERT_OK(module->input_output_alias_config().SetUpAlias({}, 0, {}));
+  ASSERT_OK(module->input_output_alias_config().SetUpAlias({}, 0, {}));
 
   auto buffers_orig = RunBufferAssignment(module.get());
   TF_ASSERT_OK_AND_ASSIGN(
@@ -2733,7 +2733,7 @@ TEST_F(WhileBufferAssignmentTest, ColocatedBuffers) {
   schedule.set_sequence(
       module->entry_computation(),
       {token, infeed, infeed_data, while0, while1, zero, add, while2, tuple});
-  TF_ASSERT_OK(schedule.Verify());
+  ASSERT_OK(schedule.Verify());
 
   TF_ASSERT_OK_AND_ASSIGN(
       auto assignment,
@@ -3468,7 +3468,7 @@ TEST_F(WhileBufferAssignmentTest, WhileLoopsInterferingResultRange) {
 
   // If this ASSERT fails, we constructed a bogus sequence above and this test
   // itself is buggy.
-  TF_ASSERT_OK(schedule.Verify());
+  ASSERT_OK(schedule.Verify());
 
   auto assignment =
       BufferAssigner::Run(

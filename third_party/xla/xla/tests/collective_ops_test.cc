@@ -443,7 +443,7 @@ TEST_F(CollectiveOpsTest, AllReduce_ManyConcurrentAllReduces) {
   tsl::thread::ThreadPool pool(tsl::Env::Default(), TestName(), kNumThreads);
   for (int64_t i = 0; i < kNumThreads * kRunsPerThread; ++i) {
     pool.Schedule([&] {
-      TF_ASSERT_OK(
+      ASSERT_OK(
           ExecuteReplicatedWithHloRunner(executable.get(), opts, &device_assn)
               .status());
       done.DecrementCount();

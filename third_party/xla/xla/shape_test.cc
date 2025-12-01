@@ -80,7 +80,7 @@ TEST_F(ShapeTest, ShapeToFromProto) {
        {opaque_, token_, scalar_, matrix_, matrix2_, matrix_buffer_, tuple_,
         nested_tuple_, dynamic_matrix_, unbounded_}) {
     auto shape_copy = Shape::FromProto(shape.ToProto());
-    TF_ASSERT_OK(shape_copy);
+    ASSERT_OK(shape_copy);
     EXPECT_TRUE(ShapeUtil::Equal(shape, *shape_copy))
         << shape << " != " << *shape_copy;
   }
@@ -375,7 +375,7 @@ void BM_ShapeProtoCopy(::testing::benchmark::State& state) {
 
   for (auto s : state) {
     auto copy = Shape::FromProto(shape.ToProto());
-    TF_ASSERT_OK(copy);
+    ASSERT_OK(copy);
     CHECK(ShapeUtil::Equal(shape, *copy));
   }
 }

@@ -80,7 +80,7 @@ void VerifyFlush(const io::RecordWriterOptions& options) {
     uint64_t start_size = GetFileSize(fname);
 
     // Write a new record.
-    TF_EXPECT_OK(writer.WriteRecord(records[i]));
+    EXPECT_OK(writer.WriteRecord(records[i]));
     TF_CHECK_OK(writer.Flush());
     TF_CHECK_OK(file->Flush());
 
@@ -133,8 +133,8 @@ TEST(RecordReaderWriterTest, TestBasics) {
       io::RecordWriterOptions options;
       options.zlib_options.output_buffer_size = buf_size;
       io::RecordWriter writer(file.get(), options);
-      TF_EXPECT_OK(writer.WriteRecord("abc"));
-      TF_EXPECT_OK(writer.WriteRecord("defg"));
+      EXPECT_OK(writer.WriteRecord("abc"));
+      EXPECT_OK(writer.WriteRecord("defg"));
       TF_CHECK_OK(writer.Flush());
     }
 
@@ -153,7 +153,7 @@ TEST(RecordReaderWriterTest, TestBasics) {
       EXPECT_EQ("defg", record);
 
       io::RecordReader::Metadata md;
-      TF_ASSERT_OK(reader.GetMetadata(&md));
+      ASSERT_OK(reader.GetMetadata(&md));
       EXPECT_EQ(2, md.stats.entries);
       EXPECT_EQ(7, md.stats.data_size);
       // Two entries have 16 bytes of header/footer each.
@@ -175,9 +175,9 @@ TEST(RecordReaderWriterTest, TestSkipBasic) {
       io::RecordWriterOptions options;
       options.zlib_options.output_buffer_size = buf_size;
       io::RecordWriter writer(file.get(), options);
-      TF_EXPECT_OK(writer.WriteRecord("abc"));
-      TF_EXPECT_OK(writer.WriteRecord("defg"));
-      TF_EXPECT_OK(writer.WriteRecord("hij"));
+      EXPECT_OK(writer.WriteRecord("abc"));
+      EXPECT_OK(writer.WriteRecord("defg"));
+      EXPECT_OK(writer.WriteRecord("hij"));
       TF_CHECK_OK(writer.Flush());
     }
 
@@ -212,8 +212,8 @@ TEST(RecordReaderWriterTest, TestSkipOutOfRange) {
       io::RecordWriterOptions options;
       options.zlib_options.output_buffer_size = buf_size;
       io::RecordWriter writer(file.get(), options);
-      TF_EXPECT_OK(writer.WriteRecord("abc"));
-      TF_EXPECT_OK(writer.WriteRecord("defg"));
+      EXPECT_OK(writer.WriteRecord("abc"));
+      EXPECT_OK(writer.WriteRecord("defg"));
       TF_CHECK_OK(writer.Flush());
     }
 
@@ -283,8 +283,8 @@ TEST(RecordReaderWriterTest, TestSnappy) {
       options.compression_type = io::RecordWriterOptions::SNAPPY_COMPRESSION;
       options.zlib_options.output_buffer_size = buf_size;
       io::RecordWriter writer(file.get(), options);
-      TF_EXPECT_OK(writer.WriteRecord("abc"));
-      TF_EXPECT_OK(writer.WriteRecord("defg"));
+      EXPECT_OK(writer.WriteRecord("abc"));
+      EXPECT_OK(writer.WriteRecord("defg"));
       TF_CHECK_OK(writer.Flush());
     }
 
@@ -321,8 +321,8 @@ TEST(RecordReaderWriterTest, TestZlib) {
       options.compression_type = io::RecordWriterOptions::ZLIB_COMPRESSION;
       options.zlib_options.output_buffer_size = buf_size;
       io::RecordWriter writer(file.get(), options);
-      TF_EXPECT_OK(writer.WriteRecord("abc"));
-      TF_EXPECT_OK(writer.WriteRecord("defg"));
+      EXPECT_OK(writer.WriteRecord("abc"));
+      EXPECT_OK(writer.WriteRecord("defg"));
       TF_CHECK_OK(writer.Flush());
     }
 
@@ -356,7 +356,7 @@ TEST(RecordReaderWriterTest, TestUseAfterClose) {
     io::RecordWriterOptions options;
     options.compression_type = io::RecordWriterOptions::ZLIB_COMPRESSION;
     io::RecordWriter writer(file.get(), options);
-    TF_EXPECT_OK(writer.WriteRecord("abc"));
+    EXPECT_OK(writer.WriteRecord("abc"));
     TF_CHECK_OK(writer.Flush());
     TF_CHECK_OK(writer.Close());
 

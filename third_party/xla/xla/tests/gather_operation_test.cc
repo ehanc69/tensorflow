@@ -390,7 +390,6 @@ ENTRY main {
   RunTest(hlo_text, &operand, &start_indices);
 }
 
-
 TEST_F(GatherOperationTest, OutOfBoundsUnsignedIndex) {
   // Out of bounds indices must not crash, and the indices in range should
   // produce the same values across all backends.
@@ -792,7 +791,7 @@ TEST_F(GatherOperationWithoutReferenceTest, Basic) {
   TF_ASSERT_OK_AND_ASSIGN(
       std::unique_ptr<HloModule> module,
       HloModule::CreateFromProto(computation.proto(), module_config));
-  TF_ASSERT_OK(verifier().Run(module.get()).status());
+  ASSERT_OK(verifier().Run(module.get()).status());
 
   Literal operand_arg =
       LiteralUtil::CreateR2<int32_t>({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});

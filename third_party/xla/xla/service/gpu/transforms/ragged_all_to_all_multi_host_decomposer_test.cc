@@ -56,9 +56,9 @@ ENTRY main {
   TF_ASSERT_OK_AND_ASSIGN(bool changed, decomposer.Run(module.get(), {}));
 
   EXPECT_TRUE(changed);
-  TF_EXPECT_OK(VerifyHloModule(module.get(), true, true));
-  TF_EXPECT_OK(HloDCE().Run(module.get()));
-  TF_EXPECT_OK(HloCSE(true).Run(module.get()));
+  EXPECT_OK(VerifyHloModule(module.get(), true, true));
+  EXPECT_OK(HloDCE().Run(module.get()));
+  EXPECT_OK(HloCSE(true).Run(module.get()));
 
   EXPECT_TRUE(*RunFileCheck(module->ToString(), R"(
     // CHECK: all-gather{{.*}}, replica_groups={{[{]}}{0,8},{1,9},{2,10},{3,11},{4,12},{5,13},{6,14},{7,15}{{[}]}}
@@ -90,9 +90,9 @@ ENTRY main {
   TF_ASSERT_OK_AND_ASSIGN(bool changed, decomposer.Run(module.get(), {}));
 
   EXPECT_TRUE(changed);
-  TF_EXPECT_OK(VerifyHloModule(module.get(), true, true));
-  TF_EXPECT_OK(HloDCE().Run(module.get()));
-  TF_EXPECT_OK(HloCSE(true).Run(module.get()));
+  EXPECT_OK(VerifyHloModule(module.get(), true, true));
+  EXPECT_OK(HloDCE().Run(module.get()));
+  EXPECT_OK(HloCSE(true).Run(module.get()));
 
   EXPECT_TRUE(*RunFileCheck(module->ToString(), R"(
     // CHECK: all-gather{{.*}}, replica_groups={{[{]}}{0,8},{1,9},{2,10},{3,11},{4,12},{5,13},{6,14},{7,15}{{[}]}}
@@ -146,9 +146,9 @@ ENTRY main {
   TF_ASSERT_OK_AND_ASSIGN(bool changed, decomposer.Run(module.get(), {}));
 
   EXPECT_TRUE(changed);
-  TF_EXPECT_OK(VerifyHloModule(module.get(), true, true));
-  TF_EXPECT_OK(HloDCE().Run(module.get()));
-  TF_EXPECT_OK(HloCSE(true).Run(module.get()));
+  EXPECT_OK(VerifyHloModule(module.get(), true, true));
+  EXPECT_OK(HloDCE().Run(module.get()));
+  EXPECT_OK(HloCSE(true).Run(module.get()));
 
   EXPECT_TRUE(*RunFileCheck(module->ToString(), R"(
     // CHECK: ragged-all-to-all{{.*}}, replica_groups={{[{]}}{0,1,2,3,4,5,6,7},{8,9,10,11,12,13,14,15}{{[}]}}
@@ -180,9 +180,9 @@ ENTRY main {
   TF_ASSERT_OK_AND_ASSIGN(bool changed, decomposer.Run(module.get(), {}));
   EXPECT_TRUE(changed);
 
-  TF_EXPECT_OK(VerifyHloModule(module.get(), true, true));
-  TF_EXPECT_OK(HloDCE().Run(module.get()));
-  TF_EXPECT_OK(HloCSE(true).Run(module.get()));
+  EXPECT_OK(VerifyHloModule(module.get(), true, true));
+  EXPECT_OK(HloDCE().Run(module.get()));
+  EXPECT_OK(HloCSE(true).Run(module.get()));
 
   EXPECT_TRUE(*RunFileCheck(module->ToString(), R"(
     // CHECK: all-gather{{.*}}, replica_groups={{[{]}}{0,8},{2,10},{4,12},{6,14},{1,9},{3,11},{5,13},{7,15}{{[}]}}

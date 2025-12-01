@@ -85,7 +85,7 @@ TEST_F(MultithreadedCompilation, EightModuleCompilation) {
     tsl::thread::ThreadPool thread_pool(tsl::Env::Default(), "threads-",
                                         num_threads);
     for (int i = 0; i < num_threads; i++) {
-      thread_pool.Schedule([&, i]() { TF_EXPECT_OK(do_compilation(i)); });
+      thread_pool.Schedule([&, i]() { EXPECT_OK(do_compilation(i)); });
     }
   }
 

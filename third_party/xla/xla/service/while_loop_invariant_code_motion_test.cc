@@ -434,7 +434,7 @@ TEST_F(WhileLoopInvariantCodeMotionTest, DontHoistControlDependencies) {
     HloInstruction* add_result =
         builder.AddInstruction(HloInstruction::CreateBinary(
             scalar_s32, HloOpcode::kAdd, gte_0, gte_1));
-    TF_ASSERT_OK(param->AddControlDependencyTo(add_result));
+    ASSERT_OK(param->AddControlDependencyTo(add_result));
     builder.AddInstruction(
         HloInstruction::CreateTuple({gte_0, gte_1, add_result}));
 

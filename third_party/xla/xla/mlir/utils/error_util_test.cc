@@ -34,8 +34,7 @@ TEST(ErrorUtilTest, BaseScopedDiagnosticHandler) {
 
   // Test OK without diagnostic gets passed through.
   {
-    TF_EXPECT_OK(
-        BaseScopedDiagnosticHandler(&context).Combine(absl::OkStatus()));
+    EXPECT_OK(BaseScopedDiagnosticHandler(&context).Combine(absl::OkStatus()));
   }
 
   // Verify diagnostics are captured as Unknown status.

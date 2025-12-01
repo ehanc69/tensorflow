@@ -33,7 +33,7 @@ TEST(HostStream, EnforcesFIFOOrder) {
   int expected = 0;
   bool ok = true;
   for (int i = 0; i < 2000; ++i) {
-    TF_ASSERT_OK(stream->DoHostCallback([i, &mu, &expected, &ok]() {
+    ASSERT_OK(stream->DoHostCallback([i, &mu, &expected, &ok]() {
       absl::MutexLock lock(mu);
       if (expected != i) {
         ok = false;
@@ -41,7 +41,7 @@ TEST(HostStream, EnforcesFIFOOrder) {
       ++expected;
     }));
   }
-  TF_ASSERT_OK(stream->BlockHostUntilDone());
+  ASSERT_OK(stream->BlockHostUntilDone());
   absl::MutexLock lock(mu);
   EXPECT_TRUE(ok);
 }

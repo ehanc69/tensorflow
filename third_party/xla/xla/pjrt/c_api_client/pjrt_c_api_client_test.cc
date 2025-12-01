@@ -72,7 +72,7 @@ static void SetUpCpuPjRtApi() {
   std::string device_type = "cpu";
   auto status = ::pjrt::PjrtApi(device_type);
   if (!status.ok()) {
-    TF_ASSERT_OK(
+    ASSERT_OK(
         pjrt::SetPjrtApi(device_type, ::pjrt::cpu_plugin::GetCpuPjrtApi()));
   }
 }
@@ -118,11 +118,11 @@ TEST(PjRtCApiClientTest, FulfillAliasBuffer) {
   std::unique_ptr<PjRtBuffer>& result_buffer = results[0][0];
 
   // Wait for the result buffer to be ready.
-  TF_ASSERT_OK(result_buffer->GetReadyFuture().Await());
+  ASSERT_OK(result_buffer->GetReadyFuture().Await());
 
   // Fulfill the alias buffer with the result of the add one kernel.
   ASSERT_NE(alias_buffer.second, nullptr);
-  TF_ASSERT_OK(std::move(alias_buffer.second)(result_buffer.get()));
+  ASSERT_OK(std::move(alias_buffer.second)(result_buffer.get()));
   TF_ASSERT_OK_AND_ASSIGN(auto alias_literal,
                           alias_buffer.first->ToLiteralSync());
 
@@ -189,7 +189,7 @@ TEST(PjRtCApiClientTest, ConcurrentGetReadyFuture) {
     absl::BlockingCounter blocking_counter(kNumThreads);
     for (size_t j = 0; j < kNumThreads; ++j) {
       thread_pool.Schedule([&, buffer = buffer.get()]() {
-        TF_EXPECT_OK(buffer->GetReadyFuture().Await());
+        EXPECT_OK(buffer->GetReadyFuture().Await());
         blocking_counter.DecrementCount();
       });
     }
@@ -517,7 +517,7 @@ TEST(PjRtCApiClientTest, ForwardExecuteContext) {
       client->CompileAndLoad(XlaComputation(hlo_module->ToProto()), {}));
 
   ExecuteContext context;
-  TF_ASSERT_OK(context.ffi_context().Emplace<MemsetValue>(42.0f));
+  ASSERT_OK(context.ffi_context().Emplace<MemsetValue>(42.0f));
 
   ExecuteOptions options;
   options.context = &context;

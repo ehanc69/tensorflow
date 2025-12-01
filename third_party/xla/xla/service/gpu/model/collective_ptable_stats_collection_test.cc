@@ -84,8 +84,8 @@ class CollectivePerfTableStatsCollectionTest
         profiles_path_(tsl::io::JoinPath(tsl::testing::TmpDir(), kFile)) {}
 
   void SetUp() override {
-    TF_ASSERT_OK(tsl::WriteTextProto(tsl::Env::Default(), profiles_path_,
-                                     TestProfiles(device_info_)));
+    ASSERT_OK(tsl::WriteTextProto(tsl::Env::Default(), profiles_path_,
+                                  TestProfiles(device_info_)));
   }
 
  protected:

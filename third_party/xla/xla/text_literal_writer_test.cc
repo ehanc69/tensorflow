@@ -36,7 +36,7 @@ TEST(TextLiteralWriterTest, WritesFloatLiteral) {
   ASSERT_TRUE(tsl::Env::Default()->LocalTempFilename(&path));
   ASSERT_IS_OK(TextLiteralWriter::WriteToPath(literal, path));
   std::string contents;
-  TF_ASSERT_OK(tsl::ReadFileToString(tsl::Env::Default(), path, &contents));
+  ASSERT_OK(tsl::ReadFileToString(tsl::Env::Default(), path, &contents));
   const std::string expected = R"(f32[2,2]
 (0, 0): 3.14
 (0, 1): 2.17

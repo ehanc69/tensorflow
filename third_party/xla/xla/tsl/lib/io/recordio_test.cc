@@ -134,13 +134,13 @@ class RecordioTest : public ::testing::Test {
 
   void Write(const std::string& msg) {
     ASSERT_TRUE(!reading_) << "Write() after starting to read";
-    TF_ASSERT_OK(writer_->WriteRecord(absl::string_view(msg)));
+    ASSERT_OK(writer_->WriteRecord(absl::string_view(msg)));
   }
 
 #if defined(TF_CORD_SUPPORT)
   void Write(const absl::Cord& msg) {
     ASSERT_TRUE(!reading_) << "Write() after starting to read";
-    TF_ASSERT_OK(writer_->WriteRecord(msg));
+    ASSERT_OK(writer_->WriteRecord(msg));
   }
 #endif
 
@@ -255,9 +255,9 @@ void TestNonSequentialReads(const RecordWriterOptions& writer_options,
   StringDest dst(&contents);
   RecordWriter writer(&dst, writer_options);
   for (int i = 0; i < 10; ++i) {
-    TF_ASSERT_OK(writer.WriteRecord(NumberString(i))) << i;
+    ASSERT_OK(writer.WriteRecord(NumberString(i))) << i;
   }
-  TF_ASSERT_OK(writer.Close());
+  ASSERT_OK(writer.Close());
 
   StringSource file(&contents);
   RecordReader reader(&file, reader_options);
@@ -268,17 +268,17 @@ void TestNonSequentialReads(const RecordWriterOptions& writer_options,
   uint64_t offset = 0;
   for (int i = 0; i < 10; ++i) {
     offsets[i] = offset;
-    TF_ASSERT_OK(reader.ReadRecord(&offset, &record)) << i;
+    ASSERT_OK(reader.ReadRecord(&offset, &record)) << i;
   }
 
   // Read randomly: First go back to record #3 then forward to #8.
   offset = offsets[3];
-  TF_ASSERT_OK(reader.ReadRecord(&offset, &record));
+  ASSERT_OK(reader.ReadRecord(&offset, &record));
   EXPECT_EQ("3.", record);
   EXPECT_EQ(offsets[4], offset);
 
   offset = offsets[8];
-  TF_ASSERT_OK(reader.ReadRecord(&offset, &record));
+  ASSERT_OK(reader.ReadRecord(&offset, &record));
   EXPECT_EQ("8.", record);
   EXPECT_EQ(offsets[9], offset);
 }
@@ -310,7 +310,7 @@ void TestReadError(const RecordWriterOptions& writer_options,
   const std::string wrote = BigString("well hello there!", 100);
   std::string contents;
   StringDest dst(&contents);
-  TF_ASSERT_OK(RecordWriter(&dst, writer_options).WriteRecord(wrote));
+  ASSERT_OK(RecordWriter(&dst, writer_options).WriteRecord(wrote));
 
   StringSource file(&contents);
   RecordReader reader(&file, reader_options);

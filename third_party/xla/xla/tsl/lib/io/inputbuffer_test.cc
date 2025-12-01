@@ -39,7 +39,7 @@ TEST(InputBuffer, ReadLine_Empty) {
   Env* env = Env::Default();
   std::string fname;
   ASSERT_TRUE(env->LocalTempFilename(&fname));
-  TF_ASSERT_OK(WriteStringToFile(env, fname, ""));
+  ASSERT_OK(WriteStringToFile(env, fname, ""));
 
   for (auto buf_size : BufferSizes()) {
     std::unique_ptr<RandomAccessFile> file;
@@ -78,7 +78,7 @@ TEST(InputBuffer, ReadLine_NoTrailingNewLine) {
   Env* env = Env::Default();
   std::string fname;
   ASSERT_TRUE(env->LocalTempFilename(&fname));
-  TF_ASSERT_OK(WriteStringToFile(env, fname, "line one\nline two\nline three"));
+  ASSERT_OK(WriteStringToFile(env, fname, "line one\nline two\nline three"));
 
   for (auto buf_size : BufferSizes()) {
     std::unique_ptr<RandomAccessFile> file;
@@ -129,8 +129,8 @@ TEST(InputBuffer, ReadLine_CRLF) {
   Env* env = Env::Default();
   std::string fname;
   ASSERT_TRUE(env->LocalTempFilename(&fname));
-  TF_ASSERT_OK(WriteStringToFile(env, fname,
-                                 "line one\r\n\r\n\r\nline two\r\nline three"));
+  ASSERT_OK(WriteStringToFile(env, fname,
+                              "line one\r\n\r\n\r\nline two\r\nline three"));
 
   for (auto buf_size : BufferSizes()) {
     std::unique_ptr<RandomAccessFile> file;
@@ -157,7 +157,7 @@ TEST(InputBuffer, ReadNBytes) {
   Env* env = Env::Default();
   std::string fname;
   ASSERT_TRUE(env->LocalTempFilename(&fname));
-  TF_ASSERT_OK(WriteStringToFile(env, fname, "0123456789"));
+  ASSERT_OK(WriteStringToFile(env, fname, "0123456789"));
 
   // ReadNBytes(int64, string*).
   for (auto buf_size : BufferSizes()) {
@@ -197,19 +197,19 @@ TEST(InputBuffer, ReadNBytes) {
     io::InputBuffer in(file.get(), buf_size);
 
     EXPECT_EQ(0, in.Tell());
-    TF_ASSERT_OK(in.ReadNBytes(3, read, &bytes_read));
+    ASSERT_OK(in.ReadNBytes(3, read, &bytes_read));
     EXPECT_EQ(absl::string_view(read, 3), "012");
 
     EXPECT_EQ(3, in.Tell());
-    TF_ASSERT_OK(in.ReadNBytes(0, read, &bytes_read));
+    ASSERT_OK(in.ReadNBytes(0, read, &bytes_read));
     EXPECT_EQ(absl::string_view(read, 3), "012");
 
     EXPECT_EQ(3, in.Tell());
-    TF_ASSERT_OK(in.ReadNBytes(4, read, &bytes_read));
+    ASSERT_OK(in.ReadNBytes(4, read, &bytes_read));
     EXPECT_EQ(absl::string_view(read, 4), "3456");
 
     EXPECT_EQ(7, in.Tell());
-    TF_ASSERT_OK(in.ReadNBytes(0, read, &bytes_read));
+    ASSERT_OK(in.ReadNBytes(0, read, &bytes_read));
     EXPECT_EQ(absl::string_view(read, 4), "3456");
 
     EXPECT_EQ(7, in.Tell());
@@ -221,7 +221,7 @@ TEST(InputBuffer, ReadNBytes) {
     EXPECT_EQ(absl::string_view(read, 3), "789");
 
     EXPECT_EQ(10, in.Tell());
-    TF_ASSERT_OK(in.ReadNBytes(0, read, &bytes_read));
+    ASSERT_OK(in.ReadNBytes(0, read, &bytes_read));
     EXPECT_EQ(absl::string_view(read, 3), "789");
     EXPECT_EQ(10, in.Tell());
   }
@@ -231,7 +231,7 @@ TEST(InputBuffer, SkipNBytes) {
   Env* env = Env::Default();
   std::string fname;
   ASSERT_TRUE(env->LocalTempFilename(&fname));
-  TF_ASSERT_OK(WriteStringToFile(env, fname, "0123456789"));
+  ASSERT_OK(WriteStringToFile(env, fname, "0123456789"));
 
   for (auto buf_size : BufferSizes()) {
     std::unique_ptr<RandomAccessFile> file;
@@ -267,7 +267,7 @@ TEST(InputBuffer, Seek) {
   Env* env = Env::Default();
   std::string fname;
   ASSERT_TRUE(env->LocalTempFilename(&fname));
-  TF_ASSERT_OK(WriteStringToFile(env, fname, "0123456789"));
+  ASSERT_OK(WriteStringToFile(env, fname, "0123456789"));
 
   for (auto buf_size : BufferSizes()) {
     std::unique_ptr<RandomAccessFile> file;
@@ -331,7 +331,7 @@ TEST(InputBuffer, ReadVarint32) {
     uint32_t result = 0;
 
     for (uint32_t expected : data) {
-      TF_ASSERT_OK(in.ReadVarint32(&result));
+      ASSERT_OK(in.ReadVarint32(&result));
       EXPECT_EQ(expected, result);
     }
     EXPECT_TRUE(absl::IsOutOfRange(in.ReadVarint32(&result)));
@@ -371,7 +371,7 @@ TEST(InputBuffer, ReadVarint64) {
     uint64_t result = 0;
 
     for (uint64_t expected : data) {
-      TF_ASSERT_OK(in.ReadVarint64(&result));
+      ASSERT_OK(in.ReadVarint64(&result));
       EXPECT_EQ(expected, result);
     }
     EXPECT_TRUE(absl::IsOutOfRange(in.ReadVarint64(&result)));
@@ -382,7 +382,7 @@ TEST(InputBuffer, Hint) {
   Env* env = Env::Default();
   std::string fname;
   ASSERT_TRUE(env->LocalTempFilename(&fname));
-  TF_ASSERT_OK(WriteStringToFile(env, fname, "0123456789"));
+  ASSERT_OK(WriteStringToFile(env, fname, "0123456789"));
 
   for (auto buf_size : BufferSizes()) {
     std::unique_ptr<RandomAccessFile> file;

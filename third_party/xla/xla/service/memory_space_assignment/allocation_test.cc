@@ -69,7 +69,7 @@ ENTRY entry {
   // Use the correct instruction and operand numbers for the add instruction
   copy_allocation.AddUse(HloUse{add, 1});  // Use of p1_negate in add
   BitcastSplitFn split_fn = nullptr;
-  TF_ASSERT_OK(copy_allocation.Process(split_fn));
+  ASSERT_OK(copy_allocation.Process(split_fn));
 
   // Check copy_start and copy_done instructions.
   HloInstruction* copy_start = copy_allocation.copy_start();
@@ -124,7 +124,7 @@ ENTRY entry {
   // Use the correct instruction and operand numbers for the add instruction
   copy_allocation.AddUse(HloUse{add, 1});  // Use of p1_negate in add
   BitcastSplitFn split_fn = nullptr;
-  TF_ASSERT_OK(copy_allocation.Process(split_fn));
+  ASSERT_OK(copy_allocation.Process(split_fn));
 
   // Check copy_start and copy_done instructions.
   HloInstruction* copy_start = copy_allocation.copy_start();
@@ -182,7 +182,7 @@ ENTRY entry {
   // Use the correct instruction and operand numbers for the add instruction
   copy_allocation.AddUse(HloUse{add, 1});  // Use of p1_negate in add
   BitcastSplitFn split_fn = nullptr;
-  TF_ASSERT_OK(copy_allocation.Process(split_fn));
+  ASSERT_OK(copy_allocation.Process(split_fn));
 
   // Check copy_start and copy_done instructions.
   HloInstruction* slice_start = copy_allocation.copy_start();

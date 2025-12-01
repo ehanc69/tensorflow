@@ -110,7 +110,7 @@ TEST(HostCallbackTest, Basic) {
   ASSERT_EQ(chunk.size(), literal.size_bytes());
   std::memcpy(chunk.data(), literal.untyped_data(), literal.size_bytes());
 
-  TF_ASSERT_OK(context->OnSend(/*arg_num=*/0, metadata, std::move(chunk)));
+  ASSERT_OK(context->OnSend(/*arg_num=*/0, metadata, std::move(chunk)));
 
   PjRtChunk received_chunk;
   absl::Notification done;
@@ -166,7 +166,7 @@ TEST(HostCallbackTest, NonBlockingRecv) {
                                              received_chunk, done);
   context->Receive(/*res_num=*/0, metadata, std::move(stream));
 
-  TF_ASSERT_OK(context->OnSend(/*arg_num=*/0, metadata, std::move(chunk)));
+  ASSERT_OK(context->OnSend(/*arg_num=*/0, metadata, std::move(chunk)));
 
   // Blocks until the data is received.
   done.WaitForNotification();

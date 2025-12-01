@@ -745,7 +745,7 @@ TEST_F(FfiCustomCallTest, Tokens) {
 
   module->AddEntryComputation(builder.Build());
 
-  TF_EXPECT_OK(Execute(std::move(module), {}).status());
+  EXPECT_OK(Execute(std::move(module), {}).status());
 }
 
 TEST_F(FfiCustomCallTest, FfiUnknownTarget) {
@@ -1730,7 +1730,7 @@ TEST_F(CustomCallClientAPITest, FfiExecutionContext) {
                             /*options=*/{}));
 
   ffi::ExecutionContext execution_context;
-  TF_ASSERT_OK(execution_context.Emplace<SomeExtraContext>(42));
+  ASSERT_OK(execution_context.Emplace<SomeExtraContext>(42));
 
   ExecutableRunOptions run_options;
   run_options.set_allocator(local_client->backend().memory_allocator());

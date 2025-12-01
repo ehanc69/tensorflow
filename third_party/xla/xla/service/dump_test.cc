@@ -175,7 +175,7 @@ TEST(DumpTest, NoDumpingToFileWhenNotEnabled) {
   DumpToFileInDir(options, "disable_override", contents);
 
   std::vector<std::string> matches;
-  TF_ASSERT_OK(tsl::Env::Default()->GetMatchingPaths(filename, &matches));
+  ASSERT_OK(tsl::Env::Default()->GetMatchingPaths(filename, &matches));
   EXPECT_THAT(matches, IsEmpty());
 }
 
@@ -189,7 +189,7 @@ TEST(DumpTest, DumpingToFileWorksWhenEnabled) {
   DumpToFileInDir(options, "enable_dumping", contents);
 
   std::string real_contents;
-  TF_ASSERT_OK(
+  ASSERT_OK(
       tsl::ReadFileToString(tsl::Env::Default(), filename, &real_contents));
   EXPECT_EQ(contents, real_contents);
 }
@@ -206,7 +206,7 @@ TEST(DumpTest, DumpProtobufToFileWhenEnabled) {
   DumpProtobufToFile(module, options, "enable_proto_dumping");
 
   HloModuleProto mod;
-  TF_ASSERT_OK(tsl::ReadTextProto(tsl::Env::Default(), filename, &mod));
+  ASSERT_OK(tsl::ReadTextProto(tsl::Env::Default(), filename, &mod));
   EXPECT_EQ(mod.name(), module.name());
 }
 
@@ -222,7 +222,7 @@ TEST(DumpTest, DumpProtobufToFileWhenDisabled) {
   DumpProtobufToFile(module, options, "disable_proto_dumping");
 
   std::vector<std::string> matches;
-  TF_ASSERT_OK(tsl::Env::Default()->GetMatchingPaths(filename, &matches));
+  ASSERT_OK(tsl::Env::Default()->GetMatchingPaths(filename, &matches));
   EXPECT_THAT(matches, IsEmpty());
 }
 
@@ -280,13 +280,12 @@ TEST(DumpTest, DumpHloUnoptimizedSnapshot) {
   std::vector<std::string> matches;
   std::string pattern_filename =
       tsl::io::JoinPath(tsl::testing::TmpDir(), "*hlo_unoptimized_snapshot*");
-  TF_ASSERT_OK(
-      tsl::Env::Default()->GetMatchingPaths(pattern_filename, &matches));
+  ASSERT_OK(tsl::Env::Default()->GetMatchingPaths(pattern_filename, &matches));
   EXPECT_THAT(matches, Not(IsEmpty()));
 
   HloUnoptimizedSnapshot hlo_snapshot_loaded;
-  TF_ASSERT_OK(tsl::ReadTextProto(tsl::Env::Default(), matches.front(),
-                                  &hlo_snapshot_loaded));
+  ASSERT_OK(tsl::ReadTextProto(tsl::Env::Default(), matches.front(),
+                               &hlo_snapshot_loaded));
   EXPECT_EQ(hlo_snapshot_loaded.hlo_module().name(), module.name());
 }
 
@@ -348,13 +347,12 @@ TEST(DumpTest, DumpHloUnoptimizedSnapshotProtoBinary) {
   std::vector<std::string> matches;
   std::string pattern_filename =
       tsl::io::JoinPath(dump_dir, "*hlo_unoptimized_snapshot*");
-  TF_ASSERT_OK(
-      tsl::Env::Default()->GetMatchingPaths(pattern_filename, &matches));
+  ASSERT_OK(tsl::Env::Default()->GetMatchingPaths(pattern_filename, &matches));
   EXPECT_THAT(matches, Not(IsEmpty()));
 
   std::string file_contents;
-  TF_ASSERT_OK(tsl::ReadFileToString(tsl::Env::Default(), matches.front(),
-                                     &file_contents));
+  ASSERT_OK(tsl::ReadFileToString(tsl::Env::Default(), matches.front(),
+                                  &file_contents));
   tsl::protobuf::io::ArrayInputStream input_stream(file_contents.data(),
                                                    file_contents.size());
   TF_ASSERT_OK_AND_ASSIGN(HloUnoptimizedSnapshot hlo_snapshot_loaded,
@@ -480,7 +478,7 @@ TEST(DumpTest, GetNonDefaultDebugOptions) {
                                                          config));
   DumpNonDefaultDebugOptions(*m, kNonDefaultDebugOptionsDumpSuffix);
   std::string real_contents;
-  TF_ASSERT_OK(tsl::ReadFileToString(
+  ASSERT_OK(tsl::ReadFileToString(
       tsl::Env::Default(),
       tsl::io::JoinPath(dump_folder,
                         FilenameFor(*m, "", kNonDefaultDebugOptionsDumpSuffix)),
@@ -519,7 +517,7 @@ TEST(DumpTest, DumpPerExecutionProtoToFile) {
                                  /*text_formatter=*/nullptr);
 
   std::vector<std::string> matches;
-  TF_ASSERT_OK(tsl::Env::Default()->GetMatchingPaths(
+  ASSERT_OK(tsl::Env::Default()->GetMatchingPaths(
       tsl::io::JoinPath(dump_folder.path(), "*test_name*execution_*"),
       &matches));
   // The output of GetMatchingPaths is not stable, therefore we sort the vector.
@@ -529,8 +527,8 @@ TEST(DumpTest, DumpPerExecutionProtoToFile) {
 
   HloModuleProto loaded_proto1;
   HloModuleProto loaded_proto2;
-  TF_ASSERT_OK(tsl::ReadTextOrBinaryProto(env, matches[0], &loaded_proto1));
-  TF_ASSERT_OK(tsl::ReadTextOrBinaryProto(env, matches[1], &loaded_proto2));
+  ASSERT_OK(tsl::ReadTextOrBinaryProto(env, matches[0], &loaded_proto1));
+  ASSERT_OK(tsl::ReadTextOrBinaryProto(env, matches[1], &loaded_proto2));
   EXPECT_THAT(loaded_proto1, EqualsProto(R"pb(name: "test_module_1")pb"));
   EXPECT_THAT(loaded_proto2, EqualsProto(R"pb(name: "test_module_2")pb"));
 }

@@ -48,7 +48,7 @@ class TestInfeedBuffer : public XfeedBuffer {
   void Done(absl::StatusOr<Shape> shape) override {
     CHECK(!done_called_);
     done_called_ = true;
-    TF_ASSERT_OK(shape.status());
+    ASSERT_OK(shape.status());
     EXPECT_EQ(expect_shape_match_, ShapeUtil::Equal(shape_, shape.value()))
         << "want " << ShapeUtil::HumanString(shape_) << " "
         << (expect_shape_match_ ? "==" : "!=") << " "

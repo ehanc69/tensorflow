@@ -211,7 +211,7 @@ TEST_P(CubPrefixSumKernelCudaTest, TestPrefixSum) {
     default:
       status = absl::OkStatus();
   }
-  TF_EXPECT_OK(status);
+  EXPECT_OK(status);
 }
 
 std::string ParametersToString(

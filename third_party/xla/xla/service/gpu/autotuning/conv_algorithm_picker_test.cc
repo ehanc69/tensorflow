@@ -97,7 +97,7 @@ ENTRY main {
   ASSERT_TRUE(changed);
 
   AutotuneResults results;
-  TF_ASSERT_OK(AutotunerUtil::SerializeAutotuneResults(&results));
+  ASSERT_OK(AutotunerUtil::SerializeAutotuneResults(&results));
   ASSERT_EQ(results.results_size(), 1);
   auto& result = *results.mutable_results(0)->mutable_result();
   int64_t old_scratch_bytes = result.scratch_bytes();
@@ -105,7 +105,7 @@ ENTRY main {
   result.set_scratch_bytes(new_scratch_bytes);
 
   AutotunerUtil::ClearAutotuneResults();
-  TF_ASSERT_OK(AutotunerUtil::LoadAutotuneResults(results));
+  ASSERT_OK(AutotunerUtil::LoadAutotuneResults(results));
 
   // Now send the same module through GpuConvAlgorithmPicker again.  The conv
   // should have the new scratch bytes.
@@ -118,7 +118,7 @@ ENTRY main {
   ASSERT_TRUE(changed);
 
   // TupleSimplifier cleans this up a bit before we pattern-match
-  TF_ASSERT_OK(RunHloPass(TupleSimplifier(), m.get()).status());
+  ASSERT_OK(RunHloPass(TupleSimplifier(), m.get()).status());
 
   SCOPED_TRACE(m->ToString());
   HloInstruction* conv;

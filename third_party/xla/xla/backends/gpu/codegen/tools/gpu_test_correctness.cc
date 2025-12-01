@@ -120,11 +120,11 @@ TEST_F(CorrectnessTest, InputIndexingIsBijection) {
         hero_index, &mlir_context);
     ASSERT_TRUE(indexing.has_value());
     for (int64_t id : ids) {
-      TF_ASSERT_OK(TestBijection(indexing.value()[id],
-                                 emitter_data->analysis->fusion_hero(hero_index)
-                                     .GetOperand(id)
-                                     .shape()
-                                     .dimensions()))
+      ASSERT_OK(TestBijection(indexing.value()[id],
+                              emitter_data->analysis->fusion_hero(hero_index)
+                                  .GetOperand(id)
+                                  .shape()
+                                  .dimensions()))
           << "Expected operand " << id << " of " << hero_name << " (root index "
           << hero_index << ") to be read exactly once.";
     }
@@ -142,7 +142,7 @@ TEST_F(CorrectnessTest, OutputIndexingIsBijection) {
     auto indexing = emitter_data->emitter->ComputeThreadIdToOutputIndexing(
         hero_index, &mlir_context);
     ASSERT_TRUE(indexing.has_value());
-    TF_ASSERT_OK(TestBijection(
+    ASSERT_OK(TestBijection(
         *indexing, GetFirstArrayShape(
                        emitter_data->analysis->fusion_root(hero_index).shape())
                        .dimensions()))

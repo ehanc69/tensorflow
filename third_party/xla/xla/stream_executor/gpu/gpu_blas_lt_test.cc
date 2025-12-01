@@ -151,7 +151,7 @@ using EpilogueFromProtoTest =
     ::testing::TestWithParam<xla::BlasLtEpilogueProto>;
 
 TEST_P(EpilogueFromProtoTest, SucceedsForValidValue) {
-  TF_EXPECT_OK(BlasLt::EpilogueFromProto(GetParam()));
+  EXPECT_OK(BlasLt::EpilogueFromProto(GetParam()));
 }
 
 std::vector<xla::BlasLtEpilogueProto> EnumerateBlasLtEpilogueProtoValues() {

@@ -61,15 +61,15 @@ TEST(TupleImplTest, NullaryTuple) {
 
   EXPECT_EQ(t->Arity(), 0);
   std::vector<ValueRef> elements;
-  TF_EXPECT_OK(t->Unpack(absl::MakeSpan(elements)));
+  EXPECT_OK(t->Unpack(absl::MakeSpan(elements)));
   EXPECT_EQ(elements.size(), 0);
 
-  TF_EXPECT_OK(t->GetReadyFuture().Await());
+  EXPECT_OK(t->GetReadyFuture().Await());
 
   EXPECT_THAT(t->DebugString(), ::testing::MatchesRegex(".*Tuple\\(\\)"));
   EXPECT_FALSE(t->IsDeleted());
 
-  TF_EXPECT_OK(t->Delete().Await());
+  EXPECT_OK(t->Delete().Await());
   EXPECT_TRUE(t->IsDeleted());
 }
 
@@ -83,13 +83,13 @@ TEST(TupleImplTest, TupleOfArrays) {
                           client->MakeTuple(absl::MakeSpan(elements_in)));
   EXPECT_EQ(t->Arity(), 3);
   std::vector<ValueRef> elements(3);
-  TF_EXPECT_OK(t->Unpack(absl::MakeSpan(elements)));
+  EXPECT_OK(t->Unpack(absl::MakeSpan(elements)));
   EXPECT_THAT(elements, ::testing::ElementsAre(a1, a2, a3));
 
   EXPECT_THAT(t->DebugString(),
               ::testing::MatchesRegex(".*Tuple\\(.*,.*,.*\\)"));
 
-  TF_EXPECT_OK(t->Delete().Await());
+  EXPECT_OK(t->Delete().Await());
   EXPECT_TRUE(t->IsDeleted());
   EXPECT_TRUE(a1->IsDeleted());
   EXPECT_TRUE(a2->IsDeleted());
@@ -105,7 +105,7 @@ TEST(TupleImplTest, DeleteOfElementDeletesTuple) {
   TF_ASSERT_OK_AND_ASSIGN(auto t,
                           client->MakeTuple(absl::MakeSpan(elements_in)));
 
-  TF_EXPECT_OK(a1->Delete().Await());
+  EXPECT_OK(a1->Delete().Await());
   EXPECT_TRUE(t->IsDeleted());
   EXPECT_FALSE(a2->IsDeleted());
   EXPECT_FALSE(a3->IsDeleted());
@@ -128,13 +128,13 @@ TEST(TupleImplTest, NestedTuples) {
   EXPECT_EQ(t3->Arity(), 3);
 
   std::vector<ValueRef> elements(3);
-  TF_EXPECT_OK(t3->Unpack(absl::MakeSpan(elements)));
+  EXPECT_OK(t3->Unpack(absl::MakeSpan(elements)));
   EXPECT_THAT(elements, ::testing::ElementsAre(t1, t2, a3));
 
   t3.reset();
 
   elements.resize(t1->Arity());
-  TF_EXPECT_OK(t1->Unpack(absl::MakeSpan(elements)));
+  EXPECT_OK(t1->Unpack(absl::MakeSpan(elements)));
   EXPECT_THAT(elements, ::testing::ElementsAre(a1, a2));
 }
 

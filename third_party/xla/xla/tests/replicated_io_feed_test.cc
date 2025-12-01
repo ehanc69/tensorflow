@@ -82,9 +82,9 @@ TEST_F(ReplicatedIOFeedTest, InfeedAndOutfeed) {
   TF_ASSERT_OK_AND_ASSIGN(std::unique_ptr<HloModule> module,
                           ParseAndReturnVerifiedModule(
                               kHloText, GetModuleConfigForTest(kNumReplicas)));
-  TF_ASSERT_OK(test_runner()
-                   .ExecuteReplicated(std::move(module), opts, &device_assn)
-                   .status());
+  ASSERT_OK(test_runner()
+                .ExecuteReplicated(std::move(module), opts, &device_assn)
+                .status());
 
   // Verify that each infeed and outfeed is routed correctly. Each replica
   // should produce 10*replica (indeed) + replica (from HLO)
