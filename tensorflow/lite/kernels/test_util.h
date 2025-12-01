@@ -38,7 +38,6 @@ limitations under the License.
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include "fp16/fp16.h"  // from @FP16
 #include "absl/algorithm/container.h"
 #include "absl/log/absl_check.h"
 #include "absl/log/absl_log.h"
@@ -57,6 +56,7 @@ limitations under the License.
 #include "tensorflow/lite/string_util.h"
 #include "tensorflow/lite/testing/util.h"  // IWYU pragma: keep
 #include "tensorflow/lite/tools/optimize/quantization_utils.h"
+#include "tensorflow/lite/types/half.h"
 #include "tensorflow/lite/util.h"
 #include "tsl/platform/logging.h"
 
@@ -134,7 +134,7 @@ inline std::vector<float> Dequantize(const std::vector<T>& data, float scale,
 }
 
 template <>
-constexpr TfLiteType typeToTfLiteType<Eigen::half>() {
+constexpr TfLiteType typeToTfLiteType<half>() {
   return kTfLiteFloat16;
 }
 
