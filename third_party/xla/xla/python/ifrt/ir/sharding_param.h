@@ -35,6 +35,7 @@ limitations under the License.
 #include "xla/python/ifrt/ir/sharding_param.pb.h"
 #include "xla/python/ifrt/serdes_default_version_accessor.h"
 #include "xla/python/ifrt/serdes_version.h"
+#include "xla/tsl/platform/errors.h"
 
 namespace xla {
 namespace ifrt {
@@ -161,9 +162,19 @@ class ShardingParam {
 
   std::string DebugString() const;
 
+  // Serializes this sharding param to a proto. The caller must make sure that
+  // `proto` is empty.
+  absl::Status ToProto(
+      ShardingParamProto& proto,
+      SerDesVersion version = SerDesDefaultVersionAccessor::Get()) const;
+
   // Returns a `ShardingParamProto` representation.
   absl::StatusOr<ShardingParamProto> ToProto(
-      SerDesVersion version = SerDesDefaultVersionAccessor::Get()) const;
+      SerDesVersion version = SerDesDefaultVersionAccessor::Get()) const {
+    ShardingParamProto proto;
+    TF_RETURN_IF_ERROR(ToProto(proto, version));
+    return proto;
+  }
 
   // Constructs `ShardingParam` from `ShardingParamProto`.
   static absl::StatusOr<ShardingParam> FromProto(

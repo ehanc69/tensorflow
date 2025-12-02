@@ -51,9 +51,19 @@ class DeviceList : public tsl::ReferenceCounted<DeviceList>,
   static absl::StatusOr<RCReferenceWrapper<DeviceList>> FromProto(
       xla::ifrt::Client* client, const DeviceListProto& proto);
 
+  // Serializes the device list to `proto`. The caller must make sure that
+  // `proto` is empty.
+  void ToProto(
+      DeviceListProto& proto,
+      SerDesVersion version = SerDesDefaultVersionAccessor::Get()) const;
+
   // Returns a `DeviceListProto` representation.
   DeviceListProto ToProto(
-      SerDesVersion version = SerDesDefaultVersionAccessor::Get()) const;
+      SerDesVersion version = SerDesDefaultVersionAccessor::Get()) const {
+    DeviceListProto proto;
+    ToProto(proto, version);
+    return proto;
+  }
 
   // Returns the number of devices.
   // TODO(hyeontaek): Make this a virtual method and make it possible for a
