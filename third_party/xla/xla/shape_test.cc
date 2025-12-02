@@ -86,6 +86,19 @@ TEST_F(ShapeTest, ShapeToFromProto) {
   }
 }
 
+TEST_F(ShapeTest, ShapeToFromProtoInplace) {
+  for (const Shape& shape :
+       {opaque_, token_, scalar_, matrix_, matrix2_, matrix_buffer_, tuple_,
+        nested_tuple_, dynamic_matrix_, unbounded_}) {
+    ShapeProto shape_proto;
+    shape.ToProto(shape_proto);
+    auto shape_copy = Shape::FromProto(shape_proto);
+    TF_ASSERT_OK(shape_copy);
+    EXPECT_TRUE(ShapeUtil::Equal(shape, *shape_copy))
+        << shape << " != " << *shape_copy;
+  }
+}
+
 TEST_F(ShapeTest, ShapeToString) {
   EXPECT_EQ("opaque[]", opaque_.ToString());
   EXPECT_EQ("token[]", token_.ToString());

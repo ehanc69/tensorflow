@@ -47,7 +47,7 @@ class Tile {
   explicit Tile(absl::Span<const int64_t> dimensions)
       : dimensions_(dimensions.begin(), dimensions.end()) {}
 
-  // De/Serialize a Tile to and from a TileProto.
+  // Deserializes a Tile from a TileProto.
   static absl::StatusOr<Tile> FromProto(const TileProto& tile_proto) {
     Tile tile;
     tile.dimensions_.reserve(tile_proto.dimensions_size());
@@ -57,7 +57,17 @@ class Tile {
     }
     return tile;
   }
-  TileProto ToProto() const;
+
+  // Serializes the Tile to a TileProto. The caller must make sure that
+  // `tile_proto` is empty.
+  void ToProto(TileProto& tile_proto) const;
+
+  // Returns a TileProto representation of the Tile.
+  TileProto ToProto() const {
+    TileProto proto;
+    ToProto(proto);
+    return proto;
+  }
 
   bool operator==(const Tile& other) const {
     return dimensions() == other.dimensions();
@@ -120,12 +130,23 @@ class SplitConfig {
       : dimension_(dimension),
         split_indices_(split_indices.begin(), split_indices.end()) {}
 
+  // Creates a SplitConfig from a SplitConfigProto.
   static SplitConfig CreateFromProto(
       const SplitConfigProto& split_config_proto) {
     return SplitConfig(split_config_proto.dimension(),
                        split_config_proto.split_indices());
   }
-  SplitConfigProto ToProto() const;
+
+  // Serializes the SplitConfig to a SplitConfigProto. The caller must make sure
+  // that `split_config_proto` is empty.
+  void ToProto(SplitConfigProto& split_config_proto) const;
+
+  // Returns a SplitConfigProto representation of the SplitConfig.
+  SplitConfigProto ToProto() const {
+    SplitConfigProto proto;
+    ToProto(proto);
+    return proto;
+  }
 
   bool operator==(const SplitConfig& other) const {
     return dimension() == other.dimension() &&
@@ -202,8 +223,16 @@ class Layout {
     return FromProto(proto).value();
   }
 
+  // Serializes the Layout to a LayoutProto. The caller must make sure that
+  // `proto` is empty.
+  void ToProto(LayoutProto& proto) const;
+
   // Returns a LayoutProto representation of the Layout.
-  LayoutProto ToProto() const;
+  LayoutProto ToProto() const {
+    LayoutProto proto;
+    ToProto(proto);
+    return proto;
+  }
 
   // Prints this layout as human-readable string, in the format
   // "{minor_to_major:properties}", where the fields are:
